@@ -1,0 +1,22 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[environments.production]
+MONGODB_URI = "mongodb+srv://aldanmoldabekov_db_user:QjUF5KxU7szPI93s@cluster0.s78kcss.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+JWT_SECRET = "your-super-secret-jwt-key-here-production"
+JWT_REFRESH_SECRET = "your-super-secret-refresh-key-here-production"
+JWT_EXPIRES_IN = "15m"
+JWT_REFRESH_EXPIRES_IN = "7d"
+HOSTAWAY_ACCOUNT_ID = "61148"
+HOSTAWAY_API_KEY = "f94377ebbbb479490bb3ec364649168dc443dda2e4830facaf5de2e74ccc9152"
+GOOGLE_PLACES_API_KEY = "AIzaSyDNSbR6pRVtIgvhTZXZWNfmVuSHE6lRf8U"
+NODE_ENV = "production"
+PORT = "5000"
