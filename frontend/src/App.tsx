@@ -29,21 +29,21 @@ function App() {
             <ConditionalHeader />
             <main className="flex-1">
               <Routes>
-                {/* Public Routes */}
+                {}
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/properties" element={<PropertiesList />} />
                 <Route path="/properties/:id" element={<PropertyDetails />} />
 
-                {/* Review Display - Public route for showing approved reviews */}
+                {}
                 <Route
                   path="/review-display/:listingId"
                   element={<ReviewDisplay />}
                 />
                 <Route path="/reviews/:listingId" element={<ReviewDisplay />} />
 
-                {/* Protected Routes */}
+                {}
                 <Route
                   path="/dashboard"
                   element={
@@ -53,10 +53,10 @@ function App() {
                   }
                 />
 
-                {/* Legacy route for old properties page */}
+                {}
                 <Route path="/admin/properties" element={<Properties />} />
 
-                {/* Catch all route */}
+                {}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>

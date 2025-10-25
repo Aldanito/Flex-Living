@@ -46,7 +46,6 @@ const ReviewSelectionSchema: Schema = new Schema(
   }
 );
 
-// Index for efficient queries
 ReviewSelectionSchema.index({ propertyId: 1, isApproved: 1 });
 ReviewSelectionSchema.index({ source: 1, isApproved: 1 });
 

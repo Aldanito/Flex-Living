@@ -1,6 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import type { DashboardStats, Review, ReviewFilters } from "../types/index";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useAuth } from "../hooks/useAuth";
+import type {
+  DashboardStats,
+  Review,
+  ReviewFilters,
+  ApiError,
+} from "../types/index";
 import apiService from "../services/api";
 import { DashboardHeader } from "../components/DashboardHeader";
 import { StatsCards } from "../components/StatsCards";
@@ -38,13 +43,26 @@ export const Dashboard: React.FC = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
   const [selectedPropertyName, setSelectedPropertyName] = useState<string>("");
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
+  const loadReviews = useCallback(async () => {
+    try {
+      setReviewsLoading(true);
+      const response = await apiService.getReviews(filters);
+      setReviews(response.reviews);
+      setTotalReviews(response.total);
+      setHasMore(response.hasMore);
+    } catch (err: unknown) {
+      setError(
+        (err as ApiError).response?.data?.message || "Failed to load reviews"
+      );
+    } finally {
+      setReviewsLoading(false);
+    }
+  }, [filters]);
 
   useEffect(() => {
+    loadDashboardData();
     loadReviews();
-  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadReviews]);
 
   const loadDashboardData = async () => {
     try {
@@ -53,12 +71,11 @@ export const Dashboard: React.FC = () => {
       const [statsData] = await Promise.all([apiService.getDashboardStats()]);
       setStats(statsData);
     } catch (err: unknown) {
-      console.error("Dashboard data loading error:", err);
       const errorMessage =
-        (err as any).response?.data?.message || "Failed to load dashboard data";
+        (err as ApiError).response?.data?.message ||
+        "Failed to load dashboard data";
       setError(errorMessage);
 
-      // Set default stats if API fails
       setStats({
         totalReviews: 0,
         approvedReviews: 0,
@@ -76,33 +93,16 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const loadReviews = async () => {
-    try {
-      setReviewsLoading(true);
-      const response = await apiService.getReviews(filters);
-      setReviews(response.reviews);
-      setTotalReviews(response.total);
-      setHasMore(response.hasMore);
-    } catch (err: unknown) {
-      setError(
-        (err as any).response?.data?.message || "Failed to load reviews"
-      );
-    } finally {
-      setReviewsLoading(false);
-    }
-  };
-
   const handleFilterChange = (newFilters: Partial<ReviewFilters>) => {
     setFilters((prev) => ({
       ...prev,
       ...newFilters,
-      offset: 0, // Reset offset when filters change
+      offset: 0,
     }));
   };
 
   const handleBulkApprove = async (reviewIds: string[]) => {
     try {
-      // Process bulk approval - in a real app, you'd have a bulk API endpoint
       for (const reviewId of reviewIds) {
         const review = reviews.find((r) => r.id === reviewId);
         if (review) {
@@ -117,14 +117,14 @@ export const Dashboard: React.FC = () => {
       loadDashboardData();
     } catch (err: unknown) {
       setError(
-        (err as any).response?.data?.message || "Failed to bulk approve reviews"
+        (err as ApiError).response?.data?.message ||
+          "Failed to bulk approve reviews"
       );
     }
   };
 
   const handleBulkUnapprove = async (reviewIds: string[]) => {
     try {
-      // Process bulk unapproval
       for (const reviewId of reviewIds) {
         await apiService.unapproveReview(reviewId);
       }
@@ -132,7 +132,7 @@ export const Dashboard: React.FC = () => {
       loadDashboardData();
     } catch (err: unknown) {
       setError(
-        (err as any).response?.data?.message ||
+        (err as ApiError).response?.data?.message ||
           "Failed to bulk unapprove reviews"
       );
     }
@@ -144,7 +144,6 @@ export const Dashboard: React.FC = () => {
     source: string
   ) => {
     try {
-      // Find the review to get its propertyId
       const review = reviews.find((r) => r.id === reviewId);
       const propertyId = review?.propertyId || listingId;
       await apiService.approveReview(reviewId, propertyId, source);
@@ -156,17 +155,17 @@ export const Dashboard: React.FC = () => {
                 approved: true,
                 approval: {
                   isApproved: true,
-                  approvedBy: "current_user", // You might want to get this from auth context
+                  approvedBy: "current_user",
                   approvedAt: new Date().toISOString(),
                 },
               }
             : review
         )
       );
-      // Refresh reviews to ensure data consistency
+
       await loadReviews();
     } catch (error) {
-      console.error("Error approving review:", error);
+      console.error("Failed to approve review:", error);
     }
   };
 
@@ -188,10 +187,10 @@ export const Dashboard: React.FC = () => {
             : review
         )
       );
-      // Refresh reviews to ensure data consistency
+
       await loadReviews();
     } catch (error) {
-      console.error("Error unapproving review:", error);
+      console.error("Failed to unapprove review:", error);
     }
   };
 
@@ -214,7 +213,6 @@ export const Dashboard: React.FC = () => {
     setSelectedPropertyName("");
   };
 
-  // Computed properties for better data analysis
   const propertyPerformance = useMemo(() => {
     if (!stats?.listingStats) return [];
 
@@ -235,7 +233,6 @@ export const Dashboard: React.FC = () => {
   const trendData = useMemo(() => {
     if (!reviews.length) return null;
 
-    // Group reviews by month for trend analysis
     const monthlyData = reviews.reduce((acc, review) => {
       const month = new Date(review.reviewDate).toISOString().slice(0, 7);
       if (!acc[month]) {
@@ -260,7 +257,6 @@ export const Dashboard: React.FC = () => {
   const recurringIssues = useMemo(() => {
     if (!reviews.length) return [];
 
-    // Simple keyword analysis for recurring issues
     const issueKeywords = [
       "noise",
       "clean",
@@ -317,7 +313,7 @@ export const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Hero Section */}
+        {}
         <div className="mb-12 animate-fade-in">
           <div className="bg-gradient-to-br from-[#284E4C] to-[#1a3a38] rounded-3xl p-12 text-center shadow-2xl">
             <h1 className="text-5xl font-bold text-white mb-4">
@@ -330,7 +326,7 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Tab Navigation */}
+        {}
         <div className="mb-12 animate-slide-up">
           <nav className="flex justify-center space-x-2 bg-white/60 backdrop-blur-xl rounded-2xl p-2 shadow-xl">
             {[
@@ -372,7 +368,7 @@ export const Dashboard: React.FC = () => {
           </nav>
         </div>
 
-        {/* Tab Content */}
+        {}
         <div className="animate-fade-in">
           {activeTab === "reviews" && (
             <div className="space-y-8">
@@ -494,7 +490,7 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Property Details Modal */}
+      {}
       <PropertyDetailsModal
         isOpen={modalOpen}
         onClose={handleCloseModal}

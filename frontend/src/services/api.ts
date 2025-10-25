@@ -9,14 +9,15 @@ import type {
   GooglePlacesResponse,
   GooglePlaceDetailsResponse,
 } from "../types/index";
-// Data normalization removed - using actual backend responses
 
 class ApiService {
   private api: AxiosInstance;
   private baseURL: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+    this.baseURL =
+      import.meta.env.VITE_API_URL ||
+      "https://flexbackend-production.up.railway.app/api";
 
     this.api = axios.create({
       baseURL: this.baseURL,
@@ -25,7 +26,6 @@ class ApiService {
       },
     });
 
-    // Request interceptor to add auth token
     this.api.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem("accessToken");
@@ -39,7 +39,6 @@ class ApiService {
       }
     );
 
-    // Response interceptor to handle token refresh
     this.api.interceptors.response.use(
       (response) => response,
       async (error) => {
@@ -61,12 +60,10 @@ class ApiService {
               const { accessToken } = response.data;
               localStorage.setItem("accessToken", accessToken);
 
-              // Retry the original request with new token
               originalRequest.headers.Authorization = `Bearer ${accessToken}`;
               return this.api(originalRequest);
             }
           } catch {
-            // Refresh failed, redirect to login
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
             window.location.href = "/login";
@@ -78,7 +75,6 @@ class ApiService {
     );
   }
 
-  // Auth endpoints
   async login(email: string, password: string): Promise<AuthResponse> {
     const response: AxiosResponse<AuthResponse> = await this.api.post(
       "/auth/login",
@@ -111,14 +107,18 @@ class ApiService {
     return response.data;
   }
 
-  // Reviews endpoints
   async getReviews(filters: ReviewFilters = {}): Promise<ReviewsResponse> {
+    const params = { ...filters };
+    if (params.offset !== undefined && params.page === undefined) {
+      params.page = Math.floor((params.offset || 0) / (params.limit || 50)) + 1;
+      delete params.offset;
+    }
+
     const response = await this.api.get("/reviews", {
-      params: filters,
+      params,
     });
 
-    // Handle the actual backend response format
-    // Backend returns: { reviews: [...], total: number, limit: number, offset: number, hasMore: boolean }
+    // Handle the deployed backend response format
     if (response.data.reviews) {
       return {
         reviews: response.data.reviews || [],
@@ -129,7 +129,6 @@ class ApiService {
       };
     }
 
-    // Fallback for error cases
     return {
       reviews: [],
       total: 0,
@@ -149,7 +148,6 @@ class ApiService {
       params: { rating, limit, offset },
     });
 
-    // Handle the actual backend response format
     return {
       reviews: response.data.reviews || [],
       total: response.data.total || 0,
@@ -186,7 +184,6 @@ class ApiService {
   async getDashboardStats(): Promise<DashboardStats> {
     const response = await this.api.get("/reviews/stats");
 
-    // Handle the actual backend response format
     if (response.data.success && response.data.data) {
       const stats = response.data.data;
       return {
@@ -209,7 +206,6 @@ class ApiService {
       };
     }
 
-    // Fallback for error cases
     return {
       totalReviews: 0,
       approvedReviews: 0,
@@ -229,7 +225,6 @@ class ApiService {
     return response.data;
   }
 
-  // Google Places endpoints
   async testGooglePlaces() {
     const response = await this.api.get("/google/test");
     return response.data;
@@ -263,13 +258,11 @@ class ApiService {
     return response.data;
   }
 
-  // Properties endpoints
   async getPublicProperties(filters: Record<string, unknown> = {}) {
     const response = await this.api.get("/properties/public", {
       params: filters,
     });
 
-    // Handle the actual backend response format
     if (response.data.success && response.data.data) {
       return {
         success: true,
@@ -286,7 +279,6 @@ class ApiService {
       params: filters,
     });
 
-    // Handle the actual backend response format
     if (response.data.success && response.data.data) {
       return {
         success: true,
@@ -301,7 +293,6 @@ class ApiService {
   async getProperty(id: string) {
     const response = await this.api.get(`/properties/${id}`);
 
-    // Handle the actual backend response format
     if (response.data.success && response.data.data) {
       return {
         success: true,

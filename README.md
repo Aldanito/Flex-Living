@@ -6,6 +6,27 @@ A comprehensive review management system for Flex Living properties, built as a 
 
 This project implements a full-stack review management dashboard that integrates with Hostaway API and Google Places API to provide comprehensive review analytics and management capabilities for property managers.
 
+## Live Application
+
+🚀 **Live Demo**: [https://flexfrontend-production-4ad0.up.railway.app/](https://flexfrontend-production-4ad0.up.railway.app/)
+
+## Demo Access
+
+### Manager Login Credentials
+
+For testing and demonstration purposes, use the following credentials to access the manager dashboard:
+
+**Email**: `manager@flexliving.com`  
+**Password**: `password123`
+
+**Access Points**:
+
+- Manager Dashboard: `/dashboard`
+- Property Management: `/dashboard/properties`
+- Review Management: `/dashboard/reviews`
+
+**Note**: This is a demo account with full manager privileges for testing the application features.
+
 ## Table of Contents
 
 - [Features](#features)
@@ -30,6 +51,38 @@ This project implements a full-stack review management dashboard that integrates
 - **Bulk Operations**: Mass approve/reject reviews for efficient management
 - **Trend Analysis**: Identify patterns and recurring issues across properties
 - **Channel Distribution**: Monitor review sources (Hostaway, Google, etc.)
+
+#### Review Management Interface
+
+![Reviews Management Interface](./IMAGES/image.png)
+
+The review management interface provides comprehensive filtering and approval functionality for guest reviews. Features include:
+
+- **Advanced Filtering**: Filter by listing ID, source, rating, channel, and date range
+- **Bulk Operations**: Approve or reject multiple reviews at once
+- **Status Management**: Track review approval status (Pending, Approved, Rejected)
+- **Source Integration**: Display reviews from multiple sources (Google, Hostaway, etc.)
+- **Real-time Updates**: Live status updates and action buttons for each review
+
+### Property Management
+
+- **Property Synchronization**: Sync properties directly from Hostaway API
+- **Status Management**: Track property approval status (Pending, Approved, Rejected)
+- **Property Details**: View comprehensive property information including location, pricing, and amenities
+- **Bulk Operations**: Manage multiple properties efficiently with status filters
+- **Location Integration**: Display property locations with detailed addresses and city information
+
+#### Property Management Interface
+
+![Property Management Interface](./IMAGES/image%20copy.png)
+
+The property management interface allows administrators to manage properties from Hostaway with comprehensive capabilities for property approval and management.
+
+#### Property Preview Modal
+
+![Property Preview Modal](./IMAGES/image%20copy%202.png)
+
+The property preview modal provides a comprehensive view of what users will see when a property is approved for public display, including visual property showcase and detailed amenities.
 
 ### Public Property Pages
 
@@ -57,10 +110,10 @@ This project implements a full-stack review management dashboard that integrates
 
 ### Frontend
 
-- **React 18** with **TypeScript**
+- **React 19** with **TypeScript**
 - **Vite** for build tooling
 - **Tailwind CSS** for styling
-- **React Router** for navigation
+- **React Router v7** for navigation
 - **Heroicons** for iconography
 - **Axios** for API communication
 
@@ -128,7 +181,7 @@ This project implements a full-stack review management dashboard that integrates
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Aldanito/Flex-Living.git
    cd Flex-Living
    ```
 
@@ -136,8 +189,7 @@ This project implements a full-stack review management dashboard that integrates
 
    ```bash
    cd backend
-   cp env.example .env
-   # Edit .env with your configuration
+   # Create .env file with your configuration
    npm install
    npm run dev
    ```
@@ -145,8 +197,7 @@ This project implements a full-stack review management dashboard that integrates
 3. **Frontend Setup**
    ```bash
    cd frontend
-   cp env.example .env
-   # Edit .env with your configuration
+   # Create .env file with your configuration
    npm install
    npm run dev
    ```
@@ -156,11 +207,8 @@ This project implements a full-stack review management dashboard that integrates
 1. **Environment Configuration**
 
    ```bash
-   # Backend
-   cp backend/env.example backend/.env
-
-   # Frontend
-   cp frontend/env.example frontend/.env
+   # Backend - Create .env file with your configuration
+   # Frontend - Create .env file with your configuration
    ```
 
 2. **Start Services**
@@ -173,6 +221,7 @@ This project implements a full-stack review management dashboard that integrates
    - Frontend: http://localhost:3000
    - Backend: http://localhost:5001
    - Dashboard: http://localhost:3000/dashboard
+   - Demo Login: Use `manager@flexliving.com` / `password123`
 
 ## Usage
 
@@ -368,3 +417,13 @@ VITE_API_URL=http://localhost:5001/api
 **Built for Flex Living**
 
 _This project demonstrates modern full-stack development practices, API integration expertise, and user-centered design principles._
+
+## Repository & Development
+
+📁 **GitHub Repository**: [https://github.com/Aldanito/Flex-Living](https://github.com/Aldanito/Flex-Living)
+
+🤖 **AI Development Assistant**: This project was developed with assistance from **Claude Sonnet 4** (Anthropic's AI assistant) for code generation, documentation, and implementation guidance.
+
+---
+
+**Live Application**: [https://flexfrontend-production-4ad0.up.railway.app/](https://flexfrontend-production-4ad0.up.railway.app/) | **Repository**: [https://github.com/Aldanito/Flex-Living](https://github.com/Aldanito/Flex-Living)

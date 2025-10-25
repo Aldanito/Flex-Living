@@ -15,9 +15,9 @@ export const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Navigation */}
+        {}
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
+          {}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <div className="w-16 h-16 rounded-lg overflow-hidden">
@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/properties"
@@ -40,11 +40,11 @@ export const Header: React.FC = () => {
               <span>Properties</span>
             </Link>
 
-            {/* User Dropdown */}
+            {}
             <UserDropdown />
           </nav>
 
-          {/* Mobile menu button */}
+          {}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -59,12 +59,12 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Search Bar */}
+        {}
         <div className="pb-4">
           <SearchBar />
         </div>
 
-        {/* Mobile Navigation */}
+        {}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-4">

@@ -1,18 +1,7 @@
-import type { Review, DashboardStats } from "../types/index";
-
-/**
- * Data normalization utilities following DRY and SOLID principles
- * Single Responsibility: Each function has one clear purpose
- * Open/Closed: Easy to extend with new normalization rules
- * Dependency Inversion: Depends on abstractions (types) not concrete implementations
- */
+import type { Review, DashboardStats, RawReview } from "../types/index";
 
 export class DataNormalizer {
-  /**
-   * Normalize review data from various sources
-   * Handles inconsistencies in data format from different APIs
-   */
-  static normalizeReview(review: any): Review {
+  static normalizeReview(review: RawReview): Review {
     return {
       id: review.id || review.review_id || review._id || "",
       listingId:
@@ -53,40 +42,30 @@ export class DataNormalizer {
         undefined,
       reviewerUrl:
         review.reviewerUrl || review.profile_url || review.link || undefined,
-      approval: this.normalizeApproval(review.approval || review.status || {}),
+      approval: this.normalizeApproval(
+        review.approval || { status: review.status }
+      ),
     };
   }
 
-  /**
-   * Normalize rating to ensure it's between 1-5
-   */
-  private static normalizeRating(rating: any): number {
+  private static normalizeRating(rating: number | string): number {
     const num =
       typeof rating === "string" ? parseFloat(rating) : Number(rating);
     if (isNaN(num)) return 0;
     return Math.max(1, Math.min(5, Math.round(num)));
   }
 
-  /**
-   * Normalize text content
-   */
   private static normalizeText(text: string): string {
     if (!text || typeof text !== "string") return "";
     return text.trim().replace(/\s+/g, " ");
   }
 
-  /**
-   * Normalize reviewer name
-   */
   private static normalizeName(name: string): string {
     if (!name || typeof name !== "string") return "Anonymous";
     return name.trim();
   }
 
-  /**
-   * Normalize date to ISO string format
-   */
-  private static normalizeDate(date: any): string {
+  private static normalizeDate(date: string | number | Date): string {
     if (!date) return new Date().toISOString();
 
     try {
@@ -100,18 +79,14 @@ export class DataNormalizer {
     }
   }
 
-  /**
-   * Normalize source to valid enum values
-   */
   private static normalizeSource(source: string): "hostaway" | "google" {
     const normalized = source.toLowerCase().trim();
     return normalized === "google" ? "google" : "hostaway";
   }
 
-  /**
-   * Normalize approval status
-   */
-  private static normalizeApproval(approval: any): Review["approval"] {
+  private static normalizeApproval(
+    approval: Record<string, unknown>
+  ): Review["approval"] {
     if (!approval || typeof approval !== "object") {
       return {
         isApproved: false,
@@ -126,15 +101,20 @@ export class DataNormalizer {
           approval.approved ||
           approval.status === "approved"
       ),
-      approvedBy: approval.approvedBy || approval.approved_by || null,
-      approvedAt: approval.approvedAt || approval.approved_at || null,
+      approvedBy:
+        (approval.approvedBy as string) ||
+        (approval.approved_by as string) ||
+        null,
+      approvedAt:
+        (approval.approvedAt as string) ||
+        (approval.approved_at as string) ||
+        null,
     };
   }
 
-  /**
-   * Normalize dashboard stats
-   */
-  static normalizeDashboardStats(stats: any): DashboardStats {
+  static normalizeDashboardStats(
+    stats: Record<string, unknown>
+  ): DashboardStats {
     return {
       totalReviews: Number(stats.totalReviews || stats.total_reviews || 0),
       approvedReviews: Number(
@@ -145,28 +125,35 @@ export class DataNormalizer {
       ),
       averageRating: Number(stats.averageRating || stats.avg_rating || 0),
       ratingDistribution: this.normalizeRatingDistribution(
-        stats.ratingDistribution || stats.rating_distribution || {}
+        (stats.ratingDistribution || stats.rating_distribution || {}) as Record<
+          string,
+          number
+        >
       ),
       channelDistribution: this.normalizeChannelDistribution(
-        stats.channelDistribution || stats.channel_distribution || {}
+        (stats.channelDistribution ||
+          stats.channel_distribution ||
+          {}) as Record<string, number>
       ),
       listingStats: this.normalizeListingStats(
-        stats.listingStats || stats.listing_stats || {}
+        (stats.listingStats || stats.listing_stats || {}) as Record<
+          string,
+          { count?: number; avgRating?: number; avg_rating?: number }
+        >
       ),
       hostawayReviews: Number(
         stats.hostawayReviews || stats.hostaway_reviews || 0
       ),
       googleReviews: Number(stats.googleReviews || stats.google_reviews || 0),
       lastUpdated:
-        stats.lastUpdated || stats.last_updated || new Date().toISOString(),
+        (stats.lastUpdated as string) ||
+        (stats.last_updated as string) ||
+        new Date().toISOString(),
     };
   }
 
-  /**
-   * Normalize rating distribution
-   */
   private static normalizeRatingDistribution(
-    distribution: any
+    distribution: Record<string, number>
   ): DashboardStats["ratingDistribution"] {
     const defaultDist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
 
@@ -183,10 +170,9 @@ export class DataNormalizer {
     };
   }
 
-  /**
-   * Normalize channel distribution
-   */
-  private static normalizeChannelDistribution(distribution: any): {
+  private static normalizeChannelDistribution(
+    distribution: Record<string, number>
+  ): {
     [key: string]: number;
   } {
     if (!distribution || typeof distribution !== "object") {
@@ -200,10 +186,12 @@ export class DataNormalizer {
     return normalized;
   }
 
-  /**
-   * Normalize listing stats
-   */
-  private static normalizeListingStats(stats: any): {
+  private static normalizeListingStats(
+    stats: Record<
+      string,
+      { count?: number; avgRating?: number; avg_rating?: number }
+    >
+  ): {
     [key: string]: { count: number; avgRating: number };
   } {
     if (!stats || typeof stats !== "object") {
@@ -215,10 +203,8 @@ export class DataNormalizer {
     for (const [key, value] of Object.entries(stats)) {
       if (value && typeof value === "object") {
         normalized[key] = {
-          count: Number((value as any).count || 0),
-          avgRating: Number(
-            (value as any).avgRating || (value as any).avg_rating || 0
-          ),
+          count: Number(value.count || 0),
+          avgRating: Number(value.avgRating || value.avg_rating || 0),
         };
       }
     }
@@ -226,14 +212,8 @@ export class DataNormalizer {
   }
 }
 
-/**
- * Data validation utilities
- */
 export class DataValidator {
-  /**
-   * Validate review data structure
-   */
-  static validateReview(review: any): boolean {
+  static validateReview(review: Record<string, unknown>): boolean {
     if (!review || typeof review !== "object") return false;
 
     const requiredFields = [
@@ -249,10 +229,7 @@ export class DataValidator {
     );
   }
 
-  /**
-   * Validate dashboard stats structure
-   */
-  static validateDashboardStats(stats: any): boolean {
+  static validateDashboardStats(stats: Record<string, unknown>): boolean {
     if (!stats || typeof stats !== "object") return false;
 
     const requiredFields = [
@@ -267,13 +244,7 @@ export class DataValidator {
   }
 }
 
-/**
- * Data transformation utilities
- */
 export class DataTransformer {
-  /**
-   * Transform reviews for display with computed properties
-   */
   static transformReviewsForDisplay(reviews: Review[]): (Review & {
     displayDate: string;
     truncatedText: string;
@@ -303,9 +274,6 @@ export class DataTransformer {
     }));
   }
 
-  /**
-   * Group reviews by property for performance analysis
-   */
   static groupReviewsByProperty(reviews: Review[]): {
     [listingId: string]: Review[];
   } {
@@ -318,9 +286,6 @@ export class DataTransformer {
     }, {} as { [listingId: string]: Review[] });
   }
 
-  /**
-   * Calculate property performance metrics
-   */
   static calculatePropertyPerformance(reviews: Review[]): {
     listingId: string;
     totalReviews: number;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import type { Review } from "../types";
 import apiService from "../services/api";
 
@@ -48,34 +48,30 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  useEffect(() => {
-    if (isOpen && propertyId) {
-      loadPropertyData();
-    }
-  }, [isOpen, propertyId]);
-
-  const loadPropertyData = async () => {
+  const loadPropertyData = useCallback(async () => {
     try {
       setLoading(true);
-      // Check if propertyId is a MongoDB ObjectId (24 hex characters) or a Google Place ID
+
       const isMongoId = /^[0-9a-fA-F]{24}$/.test(propertyId);
 
       if (isMongoId) {
-        // It's a MongoDB ObjectId, fetch directly
         const response = await apiService.getProperty(propertyId);
         setProperty(response.data);
       } else {
-        // It's a Google Place ID or listing ID, we can't fetch property details
-        console.log("Property ID is not a MongoDB ObjectId, skipping API call");
         setProperty(null);
       }
-    } catch (err) {
-      console.error("Error loading property details:", err);
+    } catch {
       setProperty(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [propertyId]);
+
+  useEffect(() => {
+    if (isOpen && propertyId) {
+      loadPropertyData();
+    }
+  }, [isOpen, propertyId, loadPropertyData]);
 
   if (!isOpen) return null;
 
@@ -121,7 +117,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
               </div>
             ) : property ? (
               <div className="space-y-6">
-                {/* Property Preview Header */}
+                {}
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xl font-bold text-gray-900">
@@ -154,7 +150,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
                   </div>
                 </div>
 
-                {/* Image Gallery Preview */}
+                {}
                 {property.images && property.images.length > 0 && (
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-3">
@@ -201,7 +197,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
                   </div>
                 )}
 
-                {/* Property Details */}
+                {}
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-3">
@@ -259,7 +255,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
                   </div>
                 </div>
 
-                {/* Reviews Section */}
+                {}
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-3">
                     Reviews ({propertyReviews.length})
@@ -331,7 +327,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
               </div>
             ) : (
               <div className="space-y-6">
-                {/* Fallback Property Header */}
+                {}
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xl font-bold text-gray-900">
@@ -352,7 +348,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
                   </div>
                 </div>
 
-                {/* Reviews Section for Fallback */}
+                {}
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-3">
                     Reviews ({propertyReviews.length})

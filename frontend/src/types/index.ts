@@ -31,7 +31,7 @@ export interface Review {
     approvedBy: string | null;
     approvedAt: string | null;
   };
-  // Additional properties for UI components
+
   approved?: boolean;
   guestName?: string;
   createdAt?: string;
@@ -95,7 +95,7 @@ export interface ReviewFilters {
   dateTo?: string;
   limit?: number;
   offset?: number;
-  // Additional properties for UI components
+
   page?: number;
   status?: "pending" | "approved" | "rejected";
   property?: string;
@@ -170,4 +170,92 @@ export interface PropertyPerformance {
   totalReviews: number;
   averageRating: number;
   performance: string;
+}
+
+export interface RawReview {
+  id?: string;
+  review_id?: string;
+  _id?: string;
+  listingId?: string;
+  listing_id?: string;
+  property_id?: string;
+  channel?: string;
+  platform?: string;
+  rating?: number | string;
+  score?: number | string;
+  stars?: number | string;
+  reviewText?: string;
+  text?: string;
+  comment?: string;
+  content?: string;
+  reviewerName?: string;
+  author?: string;
+  user_name?: string;
+  name?: string;
+  reviewDate?: string;
+  date?: string;
+  created_at?: string;
+  timestamp?: string;
+  category?: string;
+  type?: string;
+  source?: string;
+  origin?: string;
+  reviewerPhotoUrl?: string;
+  avatar?: string;
+  profile_picture?: string;
+  reviewerUrl?: string;
+  profile_url?: string;
+  link?: string;
+  approval?: {
+    isApproved?: boolean;
+    approvedBy?: string | null;
+    approvedAt?: string | null;
+  };
+  status?: string;
+}
+
+export interface RawApproval {
+  isApproved?: boolean;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  status?: string;
+}
+
+export interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+export interface TrendData {
+  month: string;
+  count: number;
+  averageRating: number;
+  reviews: Review[];
+}
+
+export interface RawDashboardStats {
+  totalReviews?: number;
+  total_reviews?: number;
+  approvedReviews?: number;
+  approved_reviews?: number;
+  pendingReviews?: number;
+  pending_reviews?: number;
+  averageRating?: number;
+  avg_rating?: number;
+  ratingDistribution?: Record<string, number>;
+  rating_distribution?: Record<string, number>;
+  channelDistribution?: Record<string, number>;
+  channel_distribution?: Record<string, number>;
+  listingStats?: Record<string, { count: number; avgRating: number }>;
+  listing_stats?: Record<string, { count: number; avg_rating: number }>;
+  hostawayReviews?: number;
+  hostaway_reviews?: number;
+  googleReviews?: number;
+  google_reviews?: number;
+  lastUpdated?: string;
+  last_updated?: string;
 }

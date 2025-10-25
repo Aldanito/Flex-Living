@@ -10,7 +10,6 @@ import {
 const router = express.Router();
 const googlePlacesService = new GooglePlacesService();
 
-// Test Google Places API connection
 router.get(
   "/test",
   [authenticateToken, requireRole(["manager", "admin"])],
@@ -22,7 +21,7 @@ router.get(
         ...result,
       });
     } catch (error) {
-      console.error("Error testing Google Places API:", error);
+
       res.status(500).json({
         message: "Failed to test Google Places API",
         error: error instanceof Error ? error.message : "Unknown error",
@@ -31,7 +30,6 @@ router.get(
   }
 );
 
-// Search for places
 router.get(
   "/search",
   [
@@ -58,7 +56,7 @@ router.get(
         count: places.length,
       });
     } catch (error) {
-      console.error("Error searching places:", error);
+
       res.status(500).json({
         message: "Failed to search places",
         error: error instanceof Error ? error.message : "Unknown error",
@@ -67,7 +65,6 @@ router.get(
   }
 );
 
-// Get place details including reviews
 router.get(
   "/place/:placeId",
   [
@@ -89,7 +86,6 @@ router.get(
         return res.status(404).json({ message: "Place not found" });
       }
 
-      // Convert reviews to our normalized format
       const reviews = googlePlacesService.normalizeReviews(
         placeDetails,
         `google_${placeId}`
@@ -109,7 +105,7 @@ router.get(
         reviewCount: reviews.length,
       });
     } catch (error) {
-      console.error("Error fetching place details:", error);
+
       res.status(500).json({
         message: "Failed to fetch place details",
         error: error instanceof Error ? error.message : "Unknown error",
@@ -118,13 +114,11 @@ router.get(
   }
 );
 
-// Search for Flex Living reviews
 router.get(
   "/flex-living-reviews",
   [authenticateToken, requireRole(["manager", "admin"])],
   async (req: AuthRequest, res: express.Response) => {
     try {
-      console.log("Searching for Flex Living reviews on Google Places...");
 
       const reviews = await googlePlacesService.searchFlexLivingReviews();
 
@@ -135,10 +129,7 @@ router.get(
         searchTimestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error searching Flex Living reviews:", error);
 
-      // If API fails, return empty array
-      console.log("No Google reviews available due to API error");
       res.json({
         message: "Flex Living Google reviews search completed",
         reviews: [],

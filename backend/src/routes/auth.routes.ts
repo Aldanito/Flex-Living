@@ -2,13 +2,10 @@ import { Router, Request, Response } from "express";
 
 const router = Router();
 
-// Simple authentication for demo purposes
-// In production, implement proper JWT authentication
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
 
-    // Simple demo authentication
     if (username === "admin" && password === "admin123") {
       res.json({
         success: true,
@@ -19,7 +16,7 @@ router.post("/login", async (req: Request, res: Response) => {
             username: "admin",
             role: "manager",
           },
-          token: "demo-token-123", // In production, use JWT
+          token: "demo-token-123",
         },
       });
     } else {
@@ -29,7 +26,7 @@ router.post("/login", async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error("Error during login:", error);
+
     res.status(500).json({
       success: false,
       message: "Login failed",
@@ -38,7 +35,6 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-// Verify token (demo implementation)
 router.get("/verify", async (req: Request, res: Response) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
@@ -61,7 +57,7 @@ router.get("/verify", async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error("Error verifying token:", error);
+
     res.status(500).json({
       success: false,
       message: "Token verification failed",

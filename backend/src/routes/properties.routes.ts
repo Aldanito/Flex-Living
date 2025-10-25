@@ -4,11 +4,9 @@ import { authenticateToken } from "../middleware/auth";
 
 const router = Router();
 
-// Public routes (no authentication required)
 router.get("/public", propertiesController.getPublicProperties);
 router.get("/:id", propertiesController.getProperty);
 
-// Admin routes (authentication required)
 router.get(
   "/",
   authenticateToken,
@@ -40,7 +38,6 @@ router.delete(
   propertiesController.deleteProperty.bind(propertiesController)
 );
 
-// Hostaway sync and approval routes (admin only)
 router.post(
   "/sync",
   authenticateToken,

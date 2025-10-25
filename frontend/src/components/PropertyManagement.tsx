@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   CheckCircleIcon,
   XMarkIcon,
@@ -33,11 +33,7 @@ export const PropertyManagement: React.FC = () => {
     "all" | "pending" | "approved" | "rejected"
   >("all");
 
-  useEffect(() => {
-    loadProperties();
-  }, [filter]);
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiService.getAdminProperties({
@@ -45,11 +41,15 @@ export const PropertyManagement: React.FC = () => {
       });
       setProperties(response.data || []);
     } catch (error) {
-      console.error("Error loading properties:", error);
+      console.error("Failed to load properties:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    loadProperties();
+  }, [filter, loadProperties]);
 
   const handleSync = async () => {
     try {
@@ -57,7 +57,7 @@ export const PropertyManagement: React.FC = () => {
       await apiService.syncHostawayListings();
       await loadProperties();
     } catch (error) {
-      console.error("Error syncing properties:", error);
+      console.error("Failed to sync properties:", error);
     } finally {
       setSyncing(false);
     }
@@ -74,7 +74,7 @@ export const PropertyManagement: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error("Error approving property:", error);
+      console.error("Failed to approve property:", error);
     }
   };
 
@@ -89,7 +89,7 @@ export const PropertyManagement: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error("Error rejecting property:", error);
+      console.error("Failed to reject property:", error);
     }
   };
 
@@ -123,7 +123,7 @@ export const PropertyManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
@@ -145,7 +145,7 @@ export const PropertyManagement: React.FC = () => {
         </button>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="flex space-x-2">
         {(["all", "pending", "approved", "rejected"] as const).map((status) => (
           <button
@@ -167,7 +167,7 @@ export const PropertyManagement: React.FC = () => {
         ))}
       </div>
 
-      {/* Properties Table */}
+      {}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {loading ? (
           <div className="p-8 text-center">

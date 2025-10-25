@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   MapPinIcon,
   StarIcon,
-  // HomeIcon,
+
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 
@@ -57,7 +57,7 @@ export const Properties: React.FC = () => {
 
   return (
     <div className="min-h-screen flex-bg">
-      {/* Hero Section */}
+      {}
       <div className="flex-accent py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -76,7 +76,7 @@ export const Properties: React.FC = () => {
         </div>
       </div>
 
-      {/* Properties Grid */}
+      {}
       <div className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -94,7 +94,7 @@ export const Properties: React.FC = () => {
                 key={property.id}
                 className="glass-card rounded-2xl overflow-hidden card-hover"
               >
-                {/* Property Image */}
+                {}
                 <div className="relative h-64">
                   <img
                     src={property.image}
@@ -111,7 +111,7 @@ export const Properties: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Property Details */}
+                {}
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-xl font-bold flex-text">
@@ -136,7 +136,7 @@ export const Properties: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Amenities */}
+                  {}
                   <div className="flex flex-wrap gap-2 mb-6">
                     {property.amenities.map((amenity, index) => (
                       <span
@@ -148,7 +148,7 @@ export const Properties: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* Action Buttons */}
+                  {}
                   <div className="flex space-x-3">
                     <Link
                       to={`/reviews/${property.id}`}
@@ -163,7 +163,7 @@ export const Properties: React.FC = () => {
             ))}
           </div>
 
-          {/* Call to Action */}
+          {}
           <div className="text-center mt-16">
             <h3 className="text-3xl font-bold flex-text mb-4">
               Ready to Experience The Flex?

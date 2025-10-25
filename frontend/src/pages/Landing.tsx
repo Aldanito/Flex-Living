@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  // StarIcon,
+
   SparklesIcon,
   BuildingOfficeIcon,
   HeartIcon,
@@ -20,7 +20,7 @@ export const Landing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
+      {}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#284E4C] via-[#2F4F4F] to-[#1A3A38]">
           <div className="absolute inset-0 bg-black/20"></div>
@@ -102,7 +102,7 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Locations */}
+      {}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
@@ -187,7 +187,7 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Corporate Solutions */}
+      {}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
@@ -302,7 +302,7 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {}
       <section className="py-20 bg-gradient-to-br from-[#284E4C] via-[#2F4F4F] to-[#1A3A38] relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse"></div>

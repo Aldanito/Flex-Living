@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import type { ListingReviewsResponse, Review } from "../types/index";
+import type { ListingReviewsResponse, Review, ApiError } from "../types/index";
 import apiService from "../services/api";
 import {
   StarIcon,
@@ -16,28 +16,30 @@ export const ReviewDisplay: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (listingId) {
-      loadReviews();
-    }
-  }, [listingId]);
-
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     try {
       setLoading(true);
       const response: ListingReviewsResponse =
         await apiService.getListingReviews(listingId!);
-      // Only show approved reviews
+
       const approvedReviews = response.reviews.filter(
         (review) => review.approved || review.approval?.isApproved
       );
       setReviews(approvedReviews);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to load reviews");
+    } catch (err: unknown) {
+      setError(
+        (err as ApiError).response?.data?.message || "Failed to load reviews"
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }, [listingId]);
+
+  useEffect(() => {
+    if (listingId) {
+      loadReviews();
+    }
+  }, [listingId, loadReviews]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -89,7 +91,7 @@ export const ReviewDisplay: React.FC = () => {
 
   return (
     <div className="min-h-screen flex-bg">
-      {/* Hero Section */}
+      {}
       <div className="flex-accent py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -114,7 +116,7 @@ export const ReviewDisplay: React.FC = () => {
         </div>
       </div>
 
-      {/* Reviews Section */}
+      {}
       <div className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {reviews.length === 0 ? (
@@ -134,7 +136,7 @@ export const ReviewDisplay: React.FC = () => {
                   key={review.id}
                   className="glass-card rounded-2xl p-6 card-hover"
                 >
-                  {/* Review Header */}
+                  {}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-[#284E4C] rounded-full flex items-center justify-center">
@@ -161,14 +163,14 @@ export const ReviewDisplay: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Review Content */}
+                  {}
                   <div className="mb-4">
                     <p className="text-gray-700 leading-relaxed">
                       {review.comment || review.reviewText}
                     </p>
                   </div>
 
-                  {/* Review Meta */}
+                  {}
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <div className="flex items-center space-x-4">
                       <span className="flex items-center space-x-1">
@@ -187,7 +189,7 @@ export const ReviewDisplay: React.FC = () => {
         </div>
       </div>
 
-      {/* Call to Action */}
+      {}
       <div className="flex-accent py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">

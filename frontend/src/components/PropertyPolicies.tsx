@@ -6,7 +6,7 @@ export const PropertyPolicies: React.FC = () => {
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Stay Policies</h2>
 
       <div className="space-y-6">
-        {/* Check-in & Check-out */}
+        {}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-3">
             Check-in & Check-out
@@ -23,7 +23,7 @@ export const PropertyPolicies: React.FC = () => {
           </div>
         </div>
 
-        {/* House Rules */}
+        {}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-3">
             House Rules
@@ -96,7 +96,7 @@ export const PropertyPolicies: React.FC = () => {
           </ul>
         </div>
 
-        {/* Cancellation Policy */}
+        {}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-3">
             Cancellation Policy

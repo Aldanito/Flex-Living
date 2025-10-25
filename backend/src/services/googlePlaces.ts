@@ -45,11 +45,7 @@ export class GooglePlacesService {
 
   constructor() {
     this.apiKey = process.env.GOOGLE_PLACES_API_KEY || "";
-    console.log("Google Places API Key loaded:", this.apiKey ? "YES" : "NO");
-    console.log(
-      "API Key value:",
-      this.apiKey ? `${this.apiKey.substring(0, 10)}...` : "undefined"
-    );
+
     this.api = axios.create({
       baseURL: "https://maps.googleapis.com/maps/api/place",
       params: {
@@ -58,22 +54,16 @@ export class GooglePlacesService {
     });
   }
 
-  /**
-   * Search for places by text query
-   * This is useful for finding properties by name or address
-   */
   async searchPlaces(query: string): Promise<any[]> {
     try {
       if (!this.apiKey) {
         throw new Error("Google Places API key not configured");
       }
 
-      console.log(`Searching Google Places for: ${query}`);
-
       const response = await this.api.get("/textsearch/json", {
         params: {
           query,
-          type: "lodging", // Focus on accommodation types
+          type: "lodging",
         },
       });
 
@@ -88,22 +78,16 @@ export class GooglePlacesService {
 
       return response.data.results || [];
     } catch (error) {
-      console.error("Error searching Google Places:", error);
+
       throw error;
     }
   }
 
-  /**
-   * Get detailed information about a place including reviews
-   * This is the main method to fetch reviews for a specific property
-   */
   async getPlaceDetails(placeId: string): Promise<GooglePlaceDetails | null> {
     try {
       if (!this.apiKey) {
         throw new Error("Google Places API key not configured");
       }
-
-      console.log(`Fetching Google Place details for: ${placeId}`);
 
       const response = await this.api.get("/details/json", {
         params: {
@@ -121,14 +105,11 @@ export class GooglePlacesService {
 
       return response.data.result;
     } catch (error) {
-      console.error("Error fetching place details:", error);
+
       throw error;
     }
   }
 
-  /**
-   * Convert Google Place reviews to our normalized format
-   */
   normalizeReviews(
     placeDetails: GooglePlaceDetails,
     listingId: string
@@ -152,15 +133,9 @@ export class GooglePlacesService {
     }));
   }
 
-  /**
-   * Search for Flex Living properties and fetch their reviews
-   * This method attempts to find properties that might be Flex Living listings
-   */
   async searchFlexLivingReviews(): Promise<GoogleReview[]> {
     try {
-      console.log("Searching for Flex Living properties on Google Places...");
 
-      // Search terms that might match Flex Living properties
       const searchTerms = [
         "Flex Living London",
         "The Flex London",
@@ -179,44 +154,32 @@ export class GooglePlacesService {
               const placeDetails = await this.getPlaceDetails(place.place_id);
 
               if (placeDetails && placeDetails.reviews) {
-                // Use a generic listing ID since we don't have direct mapping
+
                 const listingId = `google_${place.place_id}`;
                 const reviews = this.normalizeReviews(placeDetails, listingId);
                 allReviews.push(...reviews);
 
-                console.log(
-                  `Found ${reviews.length} reviews for ${placeDetails.name}`
-                );
               }
 
-              // Add delay to respect rate limits
               await this.delay(100);
             } catch (placeError) {
-              console.error(
-                `Error fetching details for place ${place.place_id}:`,
-                placeError
-              );
+
             }
           }
 
-          // Add delay between search terms
           await this.delay(200);
         } catch (searchError) {
-          console.error(`Error searching for "${searchTerm}":`, searchError);
+
         }
       }
 
-      console.log(`Total Google reviews found: ${allReviews.length}`);
       return allReviews;
     } catch (error) {
-      console.error("Error searching Flex Living reviews:", error);
+
       throw error;
     }
   }
 
-  /**
-   * Test the Google Places API connection
-   */
   async testConnection(): Promise<{
     success: boolean;
     message: string;
@@ -230,7 +193,6 @@ export class GooglePlacesService {
         };
       }
 
-      // Test with a simple search
       const response = await this.api.get("/textsearch/json", {
         params: {
           query: "London hotel",

@@ -85,7 +85,6 @@ const PropertySchema = new Schema<IProperty>(
   }
 );
 
-// Indexes for better query performance
 PropertySchema.index({ hostawayId: 1 });
 PropertySchema.index({ hostawayListingId: 1 });
 PropertySchema.index({ googlePlaceId: 1 });

@@ -40,14 +40,13 @@ export class HostawayService {
   }
 
   private async getAccessToken(): Promise<string> {
-    // Check if we have a valid token
+
     if (this.accessToken && Date.now() < this.tokenExpiry) {
       return this.accessToken!;
     }
 
     try {
-      // Based on Hostaway API documentation, we need to use client_credentials grant
-      // with application/x-www-form-urlencoded content type
+
       const params = new URLSearchParams();
       params.append("grant_type", "client_credentials");
       params.append("client_id", process.env.HOSTAWAY_ACCOUNT_ID || "");
@@ -66,21 +65,13 @@ export class HostawayService {
       );
 
       this.accessToken = (response.data as any).access_token;
-      // Set expiry to 1 hour before actual expiry for safety
+
       this.tokenExpiry =
         Date.now() + ((response.data as any).expires_in - 3600) * 1000;
 
-      console.log("✅ Hostaway access token obtained successfully");
-      console.log("🔑 Token details:", {
-        token: this.accessToken?.substring(0, 20) + "...",
-        expiresIn: (response.data as any).expires_in,
-        tokenType: (response.data as any).token_type,
-        scope: (response.data as any).scope,
-      });
       return this.accessToken!;
     } catch (error: any) {
-      console.error("Failed to get Hostaway access token:", error);
-      console.error("Error details:", error.response?.data);
+
       throw new Error("Failed to authenticate with Hostaway API");
     }
   }
@@ -102,7 +93,7 @@ export class HostawayService {
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 401) {
-        // Token expired, try to refresh
+
         this.accessToken = null;
         this.tokenExpiry = 0;
         const newToken = await this.getAccessToken();
@@ -126,41 +117,22 @@ export class HostawayService {
     offset: number = 0
   ): Promise<HostawayReview[]> {
     try {
-      console.log(
-        `Fetching Hostaway reviews: limit=${limit}, offset=${offset}`
-      );
 
-      // Try to fetch listings first, as reviews might be part of listings
       let response: HostawayApiResponse;
 
       try {
-        // First try the listings endpoint
+
         response = await this.makeAuthenticatedRequest("/listings", {
           limit,
           offset,
         });
 
         if (response.status === "success" && response.result) {
-          // Extract reviews from listings if they exist
+
           const listings = response.result;
-          console.log("📋 Hostaway listings response:", {
-            status: response.status,
-            totalListings: listings.length,
-            listings: listings.map((l: any) => ({
-              id: l.id,
-              name: l.name,
-              address: l.address,
-              city: l.city,
-              bedrooms: l.bedroomsNumber,
-              bathrooms: l.bathroomsNumber,
-              maxGuests: l.personCapacity,
-              hasReviews: l.reviews && Array.isArray(l.reviews),
-            })),
-          });
 
           const reviews: any[] = [];
 
-          // Check if listings have reviews data
           for (const listing of listings) {
             if (listing.reviews && Array.isArray(listing.reviews)) {
               reviews.push(...listing.reviews);
@@ -168,19 +140,18 @@ export class HostawayService {
           }
 
           if (reviews.length > 0) {
-            console.log("📝 Found reviews in listings:", reviews.length);
+
             const normalizedReviews = this.normalizeReviews(reviews);
             await this.saveReviewsToFile(normalizedReviews);
             return normalizedReviews;
           } else {
-            console.log("ℹ️ No reviews found in listings data");
+
           }
         }
       } catch (listingsError) {
-        console.log("Listings endpoint failed, trying reviews endpoint...");
+
       }
 
-      // If listings don't have reviews, try the reviews endpoint directly
       response = await this.makeAuthenticatedRequest("/reviews", {
         limit,
         offset,
@@ -192,21 +163,17 @@ export class HostawayService {
 
       const reviews = this.normalizeReviews(response.result || []);
 
-      // Save to JSON file for caching
       await this.saveReviewsToFile(reviews);
 
       return reviews;
     } catch (error) {
-      console.error("Error fetching Hostaway reviews:", error);
 
-      // If API fails, try to return cached data
       try {
         const cachedReviews = await this.loadReviewsFromFile();
-        console.log("Returning cached reviews due to API error");
+
         return cachedReviews;
       } catch (cacheError) {
-        console.error("Failed to load cached reviews:", cacheError);
-        console.log("No reviews available - returning empty array");
+
         return [];
       }
     }
@@ -239,7 +206,6 @@ export class HostawayService {
       }
     }
 
-    // Default to 5 if rating is invalid
     return 5;
   }
 
@@ -255,9 +221,9 @@ export class HostawayService {
       };
 
       await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-      console.log(`Saved ${reviews.length} reviews to ${filePath}`);
+
     } catch (error) {
-      console.error("Failed to save reviews to file:", error);
+
     }
   }
 
@@ -267,26 +233,25 @@ export class HostawayService {
       const data = await fs.readFile(filePath, "utf-8");
       const parsed = JSON.parse(data);
 
-      // Check if data is less than 24 hours old
       const lastUpdated = new Date(parsed.lastUpdated);
       const now = new Date();
       const hoursDiff =
         (now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60);
 
       if (hoursDiff > 24) {
-        console.log("Cached reviews are older than 24 hours");
+
       }
 
       return parsed.reviews || [];
     } catch (error) {
-      console.error("Failed to load reviews from file:", error);
-      throw error; // Re-throw the error so the fallback to mock data works
+
+      throw error;
     }
   }
 
   async getListings(): Promise<any[]> {
     try {
-      // Use attachObjects[] parameter to get additional data
+
       const response: HostawayApiResponse = await this.makeAuthenticatedRequest(
         "/listings?attachObjects[]=bookingEngineUrls&attachObjects[]=pictures&attachObjects[]=amenities&attachObjects[]=reviews"
       );
@@ -295,50 +260,21 @@ export class HostawayService {
         throw new Error(`Hostaway API error: ${response.result}`);
       }
 
-      // Debug: Log the raw response structure
-      console.log("🔍 Raw Hostaway listings response structure:");
       if (response.result && response.result.length > 0) {
         const firstListing = response.result[0];
-        console.log("📋 First listing keys:", Object.keys(firstListing));
-        console.log("🏠 First listing amenities:", firstListing.amenities);
-        console.log(
-          "🏠 First listing listingAmenities:",
-          firstListing.listingAmenities
-        );
-        console.log("📸 First listing pictures:", firstListing.pictures);
-        console.log("📸 First listing photos:", firstListing.photos);
-        console.log(
-          "📸 First listing listingImages:",
-          firstListing.listingImages
-        );
-        console.log(
-          "🔗 First listing bookingEngineUrls:",
-          firstListing.bookingEngineUrls
-        );
-        console.log(
-          "🛏️ Bedrooms (bedroomsNumber):",
-          firstListing.bedroomsNumber
-        );
-        console.log(
-          "🚿 Bathrooms (bathroomsNumber):",
-          firstListing.bathroomsNumber
-        );
-        console.log(
-          "👥 Max Guests (personCapacity):",
-          firstListing.personCapacity
-        );
+
       }
 
       return response.result || [];
     } catch (error) {
-      console.error("Error fetching Hostaway listings:", error);
+
       throw error;
     }
   }
 
   async getListing(id: string): Promise<any> {
     try {
-      // Use attachObjects[] parameter to get additional data for individual listing
+
       const response: HostawayApiResponse = await this.makeAuthenticatedRequest(
         `/listings/${id}?attachObjects[]=bookingEngineUrls&attachObjects[]=pictures&attachObjects[]=amenities&attachObjects[]=reviews`
       );
@@ -349,12 +285,11 @@ export class HostawayService {
 
       return response.result;
     } catch (error) {
-      console.error(`Error fetching Hostaway listing ${id}:`, error);
+
       throw error;
     }
   }
 
-  // Transform Hostaway listing data to Property model format
   transformHostawayListingToProperty(hostawayListing: any): any {
     return {
       name: hostawayListing.name || "Unnamed Property",
@@ -382,12 +317,11 @@ export class HostawayService {
   private extractAmenities(hostawayListing: any): string[] {
     const amenities: string[] = [];
 
-    // Check for listingAmenities array (new format with attachObjects[])
     if (
       hostawayListing.listingAmenities &&
       Array.isArray(hostawayListing.listingAmenities)
     ) {
-      // Map amenity IDs to names based on Hostaway's amenity system
+
       const amenityIdMap: { [key: number]: string } = {
         1: "WiFi",
         2: "Kitchen",
@@ -447,9 +381,9 @@ export class HostawayService {
         }
       });
     }
-    // Fallback to old format
+
     else if (hostawayListing.amenities) {
-      // Map Hostaway amenities to our format
+
       const amenityMap: { [key: string]: string } = {
         wifi: "WiFi",
         internet: "Internet",
@@ -493,12 +427,11 @@ export class HostawayService {
   private extractImages(hostawayListing: any): string[] {
     const images: string[] = [];
 
-    // Check for listingImages array (new format with attachObjects[])
     if (
       hostawayListing.listingImages &&
       Array.isArray(hostawayListing.listingImages)
     ) {
-      // Sort by sortOrder and extract URLs
+
       hostawayListing.listingImages
         .sort((a: any, b: any) => (a.sortOrder || 0) - (b.sortOrder || 0))
         .forEach((image: any) => {
@@ -507,7 +440,7 @@ export class HostawayService {
           }
         });
     }
-    // Fallback to old formats
+
     else if (hostawayListing.photos && Array.isArray(hostawayListing.photos)) {
       hostawayListing.photos.forEach((photo: any) => {
         if (photo.url) {
@@ -531,7 +464,6 @@ export class HostawayService {
   private extractFeatures(hostawayListing: any): string[] {
     const features: string[] = [];
 
-    // Add basic features based on property data
     if (hostawayListing.bedrooms > 0) {
       features.push(
         `${hostawayListing.bedrooms} Bedroom${

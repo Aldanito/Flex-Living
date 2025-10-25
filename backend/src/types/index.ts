@@ -64,14 +64,14 @@ export interface Property {
   bedrooms: number;
   bathrooms: number;
   maxGuests: number;
-  size: number; // in square meters
+  size: number;
   pricePerNight?: number;
   pricePerMonth?: number;
   amenities: string[];
   images: string[];
-  propertyType: string; // Studio, Apartment, Loft, etc.
+  propertyType: string;
   availableFrom?: Date;
-  minimumStay: number; // in days
+  minimumStay: number;
   features: string[];
   nearbyTransport: string[];
   approved: boolean;

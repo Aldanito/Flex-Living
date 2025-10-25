@@ -9,7 +9,6 @@ export class ReviewsController {
   private hostawayService = new HostawayService();
   private googleService = new GooglePlacesService();
 
-  // Fetch and sync Hostaway reviews
   async fetchHostawayReviews(req: Request, res: Response): Promise<void> {
     try {
       const normalizedReviews = await this.hostawayService.fetchReviews(
@@ -17,7 +16,6 @@ export class ReviewsController {
         0
       );
 
-      // Save or update reviews in database
       const savedReviews = [];
       for (const review of normalizedReviews) {
         const existingReview = await Review.findOne({
@@ -26,12 +24,10 @@ export class ReviewsController {
         });
 
         if (existingReview) {
-          // Update existing review
           Object.assign(existingReview, review);
           await existingReview.save();
           savedReviews.push(existingReview);
         } else {
-          // Create new review
           const newReview = new Review(review);
           await newReview.save();
           savedReviews.push(newReview);
@@ -44,7 +40,7 @@ export class ReviewsController {
         data: savedReviews,
       });
     } catch (error) {
-      console.error("Error fetching Hostaway reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to fetch Hostaway reviews",
@@ -53,7 +49,6 @@ export class ReviewsController {
     }
   }
 
-  // Fetch and sync Google reviews
   async fetchGoogleReviews(req: Request, res: Response): Promise<void> {
     try {
       const { query } = req.query;
@@ -69,7 +64,6 @@ export class ReviewsController {
       const normalizedReviews =
         await this.googleService.searchFlexLivingReviews();
 
-      // Save or update reviews in database
       const savedReviews = [];
       for (const review of normalizedReviews) {
         const existingReview = await Review.findOne({
@@ -78,12 +72,12 @@ export class ReviewsController {
         });
 
         if (existingReview) {
-          // Update existing review
+
           Object.assign(existingReview, review);
           await existingReview.save();
           savedReviews.push(existingReview);
         } else {
-          // Create new review
+
           const newReview = new Review(review);
           await newReview.save();
           savedReviews.push(newReview);
@@ -96,7 +90,7 @@ export class ReviewsController {
         data: savedReviews,
       });
     } catch (error) {
-      console.error("Error fetching Google reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to fetch Google reviews",
@@ -105,7 +99,6 @@ export class ReviewsController {
     }
   }
 
-  // Sync all reviews from both sources
   async syncAllReviews(req: Request, res: Response): Promise<void> {
     try {
       const results = {
@@ -113,7 +106,6 @@ export class ReviewsController {
         google: { success: false, count: 0, error: null as string | null },
       };
 
-      // Sync Hostaway reviews
       try {
         const hostawayReviews = await this.hostawayService.fetchReviews(
           1000,
@@ -136,7 +128,6 @@ export class ReviewsController {
           error instanceof Error ? error.message : "Unknown error";
       }
 
-      // Sync Google reviews (using default search terms)
       try {
         const searchTerms = [
           "Flex Living",
@@ -158,7 +149,7 @@ export class ReviewsController {
             }
             totalGoogleReviews += googleReviews.length;
           } catch (error) {
-            console.error(`Error searching for "${term}":`, error);
+
           }
         }
         results.google = {
@@ -177,7 +168,7 @@ export class ReviewsController {
         data: results,
       });
     } catch (error) {
-      console.error("Error syncing all reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to sync reviews",
@@ -186,7 +177,6 @@ export class ReviewsController {
     }
   }
 
-  // Get all reviews with filtering
   async getReviews(req: Request, res: Response): Promise<void> {
     try {
       const {
@@ -253,7 +243,7 @@ export class ReviewsController {
         },
       });
     } catch (error) {
-      console.error("Error getting reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get reviews",
@@ -262,7 +252,6 @@ export class ReviewsController {
     }
   }
 
-  // Update review status
   async updateReviewStatus(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -296,7 +285,7 @@ export class ReviewsController {
         data: review,
       });
     } catch (error) {
-      console.error("Error updating review status:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to update review status",
@@ -305,7 +294,6 @@ export class ReviewsController {
     }
   }
 
-  // Toggle review public visibility
   async toggleReviewPublic(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -319,7 +307,6 @@ export class ReviewsController {
         return;
       }
 
-      // Only approved reviews can be made public
       if (review.status !== "approved") {
         res.status(400).json({
           success: false,
@@ -337,7 +324,7 @@ export class ReviewsController {
         data: review,
       });
     } catch (error) {
-      console.error("Error toggling review public status:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to toggle review public status",
@@ -346,7 +333,6 @@ export class ReviewsController {
     }
   }
 
-  // Get public reviews
   async getPublicReviews(req: Request, res: Response): Promise<void> {
     try {
       const { property } = req.query;
@@ -369,7 +355,7 @@ export class ReviewsController {
         data: reviews,
       });
     } catch (error) {
-      console.error("Error getting public reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get public reviews",
@@ -378,7 +364,6 @@ export class ReviewsController {
     }
   }
 
-  // Get dashboard analytics
   async getDashboardStats(req: Request, res: Response): Promise<void> {
     try {
       const totalReviews = await Review.countDocuments();
@@ -390,19 +375,16 @@ export class ReviewsController {
         status: "rejected",
       });
 
-      // Calculate average rating
       const avgRatingResult = await Review.aggregate([
         { $group: { _id: null, avgRating: { $avg: "$rating" } } },
       ]);
       const averageRating =
         avgRatingResult.length > 0 ? avgRatingResult[0].avgRating : 0;
 
-      // Reviews by source
       const reviewsBySource = await Review.aggregate([
         { $group: { _id: "$source", count: { $sum: 1 } } },
       ]);
 
-      // Reviews by property
       const reviewsByProperty = await Review.aggregate([
         {
           $group: {
@@ -415,7 +397,6 @@ export class ReviewsController {
         { $limit: 10 },
       ]);
 
-      // Recent reviews
       const recentReviews = await Review.find()
         .sort({ submittedAt: -1 })
         .limit(5);
@@ -444,7 +425,7 @@ export class ReviewsController {
         data: stats,
       });
     } catch (error) {
-      console.error("Error getting dashboard stats:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get dashboard stats",

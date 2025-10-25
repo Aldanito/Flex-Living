@@ -23,7 +23,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     onFiltersChange({
       ...filters,
       [key]: value,
-      page: 1, // Reset to first page when filters change
+      page: 1,
     });
   };
 
@@ -46,7 +46,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {isOpen && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Rating Filter */}
+          {}
           <CustomDropdown
             label="Minimum Rating"
             options={[
@@ -62,7 +62,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             placeholder="All Ratings"
           />
 
-          {/* Source Filter */}
+          {}
           <CustomDropdown
             label="Source"
             options={[
@@ -77,7 +77,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             placeholder="All Sources"
           />
 
-          {/* Status Filter */}
+          {}
           <CustomDropdown
             label="Status"
             options={[
@@ -93,7 +93,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             placeholder="All Statuses"
           />
 
-          {/* Property Filter */}
+          {}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Property
@@ -109,7 +109,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             />
           </div>
 
-          {/* Date Range */}
+          {}
           <CustomDatePicker
             label="From Date"
             value={filters.dateFrom || ""}
@@ -128,7 +128,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             placeholder="Select end date"
           />
 
-          {/* Sort Options */}
+          {}
           <CustomDropdown
             label="Sort By"
             options={[
@@ -157,7 +157,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         </div>
       )}
 
-      {/* Active Filters Display */}
+      {}
       <div className="mt-4">
         <div className="flex flex-wrap gap-2">
           {Object.entries(filters).map(([key, value]) => {

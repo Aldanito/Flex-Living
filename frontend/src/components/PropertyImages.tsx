@@ -4,10 +4,7 @@ interface PropertyImagesProps {
   listingId: string;
 }
 
-export const PropertyImages: React.FC<PropertyImagesProps> = ({
-  listingId: _listingId,
-}) => {
-  // Mock images - in a real app, these would come from the API
+export const PropertyImages: React.FC<PropertyImagesProps> = () => {
   const images = [
     {
       id: 1,
@@ -44,7 +41,7 @@ export const PropertyImages: React.FC<PropertyImagesProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       <div className="grid grid-cols-2 gap-2 h-96">
-        {/* Main image */}
+        {}
         <div className="col-span-2 row-span-2">
           <img
             src={images[0].url}
@@ -53,7 +50,7 @@ export const PropertyImages: React.FC<PropertyImagesProps> = ({
           />
         </div>
 
-        {/* Secondary images */}
+        {}
         {images.slice(1, 5).map((image) => (
           <div key={image.id} className="relative">
             <img

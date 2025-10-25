@@ -74,7 +74,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
         </div>
       </div>
 
-      {/* Rating Distribution */}
+      {}
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-3">
           Rating Breakdown
@@ -104,7 +104,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
         </div>
       </div>
 
-      {/* Rating Filters */}
+      {}
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-3">
           Filter by Rating
@@ -140,7 +140,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
         </div>
       </div>
 
-      {/* Reviews List */}
+      {}
       <div className="space-y-6">
         {reviewsData.reviews.map((review) => (
           <div
@@ -148,7 +148,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
             className="border-b border-gray-200 pb-6 last:border-b-0"
           >
             <div className="flex items-start space-x-4">
-              {/* Reviewer Avatar */}
+              {}
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                   <span className="text-sm font-medium text-gray-600">
@@ -157,7 +157,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
                 </div>
               </div>
 
-              {/* Review Content */}
+              {}
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
                   <span className="font-medium text-gray-900">
@@ -199,7 +199,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
         ))}
       </div>
 
-      {/* Load More Button */}
+      {}
       {reviewsData.reviews.length < reviewsData.total && (
         <div className="mt-6 text-center">
           <button

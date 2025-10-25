@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
+import type { ApiError } from "../types/index";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export const Register: React.FC = () => {
@@ -32,10 +33,12 @@ export const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      await register(email, password, role);
+      await register(email, password, role as "manager" | "admin");
       navigate("/dashboard");
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed");
+    } catch (err: unknown) {
+      setError(
+        (err as ApiError).response?.data?.message || "Registration failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -44,9 +47,9 @@ export const Register: React.FC = () => {
   return (
     <div className="min-h-screen flex-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        {/* Registration Card */}
+        {}
         <div className="glass-card rounded-3xl shadow-2xl p-8 animate-scale-in">
-          {/* Header */}
+          {}
           <div className="text-center mb-8">
             <div className="relative mx-auto w-16 h-16 mb-4">
               <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
@@ -66,7 +69,7 @@ export const Register: React.FC = () => {
             </p>
           </div>
 
-          {/* Error Message */}
+          {}
           {error && (
             <div className="mb-6 animate-slide-up">
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center">
@@ -78,10 +81,10 @@ export const Register: React.FC = () => {
             </div>
           )}
 
-          {/* Registration Form */}
+          {}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
-              {/* Email Field */}
+              {}
               <div>
                 <label
                   htmlFor="email"
@@ -104,7 +107,7 @@ export const Register: React.FC = () => {
                 </div>
               </div>
 
-              {/* Password Field */}
+              {}
               <div>
                 <label
                   htmlFor="password"
@@ -138,7 +141,7 @@ export const Register: React.FC = () => {
                 </div>
               </div>
 
-              {/* Confirm Password Field */}
+              {}
               <div>
                 <label
                   htmlFor="confirmPassword"
@@ -172,7 +175,7 @@ export const Register: React.FC = () => {
                 </div>
               </div>
 
-              {/* Role Field */}
+              {}
               <div>
                 <label
                   htmlFor="role"
@@ -193,7 +196,7 @@ export const Register: React.FC = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
+            {}
             <button
               type="submit"
               disabled={loading}
@@ -210,7 +213,7 @@ export const Register: React.FC = () => {
             </button>
           </form>
 
-          {/* Footer */}
+          {}
           <div className="mt-8 text-center">
             <p className="text-slate-600">
               Already have an account?{" "}

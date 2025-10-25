@@ -8,7 +8,7 @@ import {
   MagnifyingGlassIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
-import { useSearch } from "../contexts/SearchContext";
+import { useSearch } from "../hooks/useSearch";
 
 export const SearchBar: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ export const SearchBar: React.FC = () => {
     { value: "ALGIERS", label: "Algiers" },
   ];
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -48,7 +47,6 @@ export const SearchBar: React.FC = () => {
   }, []);
 
   const handleSearch = () => {
-    // Navigate to properties page with current filters
     const searchParams = new URLSearchParams();
     searchParams.set("location", filters.location);
     searchParams.set("guests", filters.guests.toString());
@@ -79,7 +77,7 @@ export const SearchBar: React.FC = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 flex items-center space-x-4 hover:shadow-xl transition-all duration-300 border border-gray-100">
-      {/* Location */}
+      {}
       <div
         className="flex items-center space-x-2 flex-1 relative group cursor-pointer"
         ref={locationDropdownRef}
@@ -94,7 +92,7 @@ export const SearchBar: React.FC = () => {
           <ChevronDownIcon className="h-4 w-4 text-gray-400 group-hover:text-[#284E4C] transition-colors" />
         </div>
 
-        {/* Enhanced Dropdown */}
+        {}
         {showLocationDropdown && (
           <div className="absolute top-full left-0 mt-3 bg-white rounded-xl shadow-2xl z-[9999] min-w-[220px] overflow-hidden border border-gray-200 animate-in slide-in-from-top-2 duration-200">
             <div className="p-2">
@@ -122,10 +120,10 @@ export const SearchBar: React.FC = () => {
         )}
       </div>
 
-      {/* Divider */}
+      {}
       <div className="w-px h-8 bg-gray-200"></div>
 
-      {/* Dates */}
+      {}
       <div
         className="flex items-center space-x-2 flex-1 relative group cursor-pointer"
         ref={datePickerRef}
@@ -180,10 +178,10 @@ export const SearchBar: React.FC = () => {
         )}
       </div>
 
-      {/* Divider */}
+      {}
       <div className="w-px h-8 bg-gray-200"></div>
 
-      {/* Guests */}
+      {}
       <div className="flex items-center space-x-2 flex-1 group">
         <UserIcon className="h-5 w-5 text-gray-400 group-hover:text-[#284E4C] transition-colors" />
         <div className="flex items-center space-x-3">
@@ -234,10 +232,10 @@ export const SearchBar: React.FC = () => {
         </span>
       </div>
 
-      {/* Divider */}
+      {}
       <div className="w-px h-8 bg-gray-200"></div>
 
-      {/* Search Button */}
+      {}
       <button
         onClick={handleSearch}
         className="flex items-center space-x-2 bg-[#284E4C] text-white px-8 py-3 rounded-xl hover:bg-[#1A3A38] transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"

@@ -73,7 +73,6 @@ const ReviewSchema = new Schema<IReview>(
   }
 );
 
-// Indexes for better query performance
 ReviewSchema.index({ source: 1, sourceId: 1 }, { unique: true });
 ReviewSchema.index({ listingName: 1 });
 ReviewSchema.index({ status: 1 });

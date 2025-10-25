@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { useState, ReactNode } from "react";
+import { SearchContext } from "./SearchContextDefinition";
 
 interface SearchFilters {
   location: string;
@@ -8,18 +9,6 @@ interface SearchFilters {
   bedrooms?: number;
   maxPrice?: number;
 }
-
-interface SearchContextType {
-  filters: SearchFilters;
-  setFilters: (filters: SearchFilters) => void;
-  updateFilter: (
-    key: keyof SearchFilters,
-    value: string | number | undefined
-  ) => void;
-  clearFilters: () => void;
-}
-
-const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 const defaultFilters: SearchFilters = {
   location: "LONDON",
@@ -61,12 +50,4 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({
       {children}
     </SearchContext.Provider>
   );
-};
-
-export const useSearch = () => {
-  const context = useContext(SearchContext);
-  if (context === undefined) {
-    throw new Error("useSearch must be used within a SearchProvider");
-  }
-  return context;
 };

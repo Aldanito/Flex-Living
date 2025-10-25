@@ -46,7 +46,7 @@ export class PropertiesController {
         data: properties,
       });
     } catch (error) {
-      console.error("Error getting properties:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get properties",
@@ -94,7 +94,7 @@ export class PropertiesController {
         data: properties,
       });
     } catch (error) {
-      console.error("Error getting public properties:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get properties",
@@ -130,7 +130,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error getting property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get property",
@@ -158,7 +158,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error getting admin property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get property",
@@ -180,7 +180,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error creating property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to create property",
@@ -213,7 +213,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error updating property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to update property",
@@ -241,7 +241,7 @@ export class PropertiesController {
         message: "Property deleted successfully",
       });
     } catch (error) {
-      console.error("Error deleting property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to delete property",
@@ -250,7 +250,6 @@ export class PropertiesController {
     }
   }
 
-  // Get property by name (for matching with reviews)
   async getPropertyByName(req: Request, res: Response): Promise<void> {
     try {
       const { name } = req.params;
@@ -272,7 +271,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error getting property by name:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to get property",
@@ -283,7 +282,6 @@ export class PropertiesController {
 
   async syncHostawayListings(req: Request, res: Response): Promise<void> {
     try {
-      console.log("Starting Hostaway listings sync...");
 
       const hostawayListings = await this.hostawayService.getListings();
       let syncedCount = 0;
@@ -296,17 +294,6 @@ export class PropertiesController {
             hostawayListing
           );
 
-        console.log("🏠 Processing property:", {
-          hostawayId: hostawayListing.id,
-          name: propertyData.name,
-          address: propertyData.address,
-          city: propertyData.city,
-          bedrooms: propertyData.bedrooms,
-          bathrooms: propertyData.bathrooms,
-          maxGuests: propertyData.maxGuests,
-          pricePerNight: propertyData.pricePerNight,
-        });
-
         const existingProperty = await Property.findOne({
           hostawayListingId: propertyData.hostawayListingId,
         });
@@ -314,16 +301,16 @@ export class PropertiesController {
         if (existingProperty) {
           await Property.findByIdAndUpdate(existingProperty._id, {
             ...propertyData,
-            approved: existingProperty.approved, // Keep existing approval status
-            status: existingProperty.status, // Keep existing status
+            approved: existingProperty.approved,
+            status: existingProperty.status,
           });
-          console.log("Updated existing property:", propertyData.name);
+
           updatedCount++;
         } else {
-          // Create new property
+
           const newProperty = new Property(propertyData);
           await newProperty.save();
-          console.log("Created new property:", propertyData.name);
+
           createdCount++;
         }
         syncedCount++;
@@ -339,7 +326,7 @@ export class PropertiesController {
         },
       });
     } catch (error) {
-      console.error("Error syncing Hostaway listings:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to sync Hostaway listings",
@@ -375,7 +362,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error approving property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to approve property",
@@ -411,7 +398,7 @@ export class PropertiesController {
         data: property,
       });
     } catch (error) {
-      console.error("Error rejecting property:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to reject property",

@@ -4,14 +4,12 @@ interface PropertyLocationProps {
   listingId: string;
 }
 
-export const PropertyLocation: React.FC<PropertyLocationProps> = ({
-  listingId: _listingId,
-}) => {
+export const PropertyLocation: React.FC<PropertyLocationProps> = () => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Location</h2>
 
-      {/* Map placeholder */}
+      {}
       <div className="w-full h-64 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
         <div className="text-center">
           <svg

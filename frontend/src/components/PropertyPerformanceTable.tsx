@@ -181,7 +181,7 @@ export const PropertyPerformanceTable: React.FC<
         </table>
       </div>
 
-      {/* Property Details Panel */}
+      {}
       {selectedProperty && (
         <div className="border-t border-gray-200 bg-gray-50 p-6">
           <div className="flex items-center justify-between mb-4">

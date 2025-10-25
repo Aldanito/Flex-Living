@@ -22,27 +22,26 @@ interface PropertyMapProps {
   city?: string;
 }
 
-// City configurations
 const cityConfigs = {
   LONDON: {
     center: { lat: 51.5074, lng: -0.1278 },
     name: "London",
     coordinates: [
-      { lat: 51.5074, lng: -0.1278 }, // Central London (Trafalgar Square)
-      { lat: 51.5045, lng: -0.0865 }, // Canary Wharf
-      { lat: 51.5154, lng: -0.0922 }, // City of London (Bank)
-      { lat: 51.5308, lng: -0.1238 }, // King's Cross
-      { lat: 51.5074, lng: -0.1195 }, // South Bank (London Eye)
-      { lat: 51.4994, lng: -0.1245 }, // Westminster
-      { lat: 51.5055, lng: -0.0754 }, // Tower Bridge
-      { lat: 51.5186, lng: -0.0814 }, // Liverpool Street
-      { lat: 51.5152, lng: -0.1419 }, // Hyde Park Corner
-      { lat: 51.5014, lng: -0.1419 }, // Buckingham Palace
-      { lat: 51.5128, lng: -0.0913 }, // St. Paul's Cathedral
-      { lat: 51.5076, lng: -0.0994 }, // Covent Garden
-      { lat: 51.52, lng: -0.0972 }, // Barbican
-      { lat: 51.5048, lng: -0.1065 }, // London Bridge
-      { lat: 51.5099, lng: -0.118 }, // Waterloo
+      { lat: 51.5074, lng: -0.1278 },
+      { lat: 51.5045, lng: -0.0865 },
+      { lat: 51.5154, lng: -0.0922 },
+      { lat: 51.5308, lng: -0.1238 },
+      { lat: 51.5074, lng: -0.1195 },
+      { lat: 51.4994, lng: -0.1245 },
+      { lat: 51.5055, lng: -0.0754 },
+      { lat: 51.5186, lng: -0.0814 },
+      { lat: 51.5152, lng: -0.1419 },
+      { lat: 51.5014, lng: -0.1419 },
+      { lat: 51.5128, lng: -0.0913 },
+      { lat: 51.5076, lng: -0.0994 },
+      { lat: 51.52, lng: -0.0972 },
+      { lat: 51.5048, lng: -0.1065 },
+      { lat: 51.5099, lng: -0.118 },
     ],
     landmarks: [
       { name: "Tower Bridge", lat: 51.5055, lng: -0.0754, color: "bg-red-500" },
@@ -97,16 +96,16 @@ const cityConfigs = {
     center: { lat: 48.8566, lng: 2.3522 },
     name: "Paris",
     coordinates: [
-      { lat: 48.8566, lng: 2.3522 }, // Notre-Dame
-      { lat: 48.8584, lng: 2.2945 }, // Eiffel Tower
-      { lat: 48.8606, lng: 2.3376 }, // Louvre
-      { lat: 48.8738, lng: 2.295 }, // Arc de Triomphe
-      { lat: 48.8566, lng: 2.3522 }, // Île de la Cité
-      { lat: 48.85, lng: 2.35 }, // Latin Quarter
-      { lat: 48.87, lng: 2.33 }, // Champs-Élysées
-      { lat: 48.84, lng: 2.32 }, // Montmartre
-      { lat: 48.86, lng: 2.28 }, // La Défense
-      { lat: 48.85, lng: 2.38 }, // Bastille
+      { lat: 48.8566, lng: 2.3522 },
+      { lat: 48.8584, lng: 2.2945 },
+      { lat: 48.8606, lng: 2.3376 },
+      { lat: 48.8738, lng: 2.295 },
+      { lat: 48.8566, lng: 2.3522 },
+      { lat: 48.85, lng: 2.35 },
+      { lat: 48.87, lng: 2.33 },
+      { lat: 48.84, lng: 2.32 },
+      { lat: 48.86, lng: 2.28 },
+      { lat: 48.85, lng: 2.38 },
     ],
     landmarks: [
       { name: "Eiffel Tower", lat: 48.8584, lng: 2.2945, color: "bg-red-500" },
@@ -132,14 +131,14 @@ const cityConfigs = {
     center: { lat: 36.7538, lng: 3.0588 },
     name: "Algiers",
     coordinates: [
-      { lat: 36.7538, lng: 3.0588 }, // Central Algiers
-      { lat: 36.76, lng: 3.05 }, // Casbah
-      { lat: 36.74, lng: 3.07 }, // Hydra
-      { lat: 36.75, lng: 3.04 }, // Bab Ezzouar
-      { lat: 36.77, lng: 3.06 }, // El Harrach
-      { lat: 36.73, lng: 3.08 }, // Kouba
-      { lat: 36.76, lng: 3.03 }, // Dar El Beida
-      { lat: 36.72, lng: 3.09 }, // Hussein Dey
+      { lat: 36.7538, lng: 3.0588 },
+      { lat: 36.76, lng: 3.05 },
+      { lat: 36.74, lng: 3.07 },
+      { lat: 36.75, lng: 3.04 },
+      { lat: 36.77, lng: 3.06 },
+      { lat: 36.73, lng: 3.08 },
+      { lat: 36.76, lng: 3.03 },
+      { lat: 36.72, lng: 3.09 },
     ],
     landmarks: [
       { name: "Casbah", lat: 36.76, lng: 3.05, color: "bg-red-500" },
@@ -180,18 +179,12 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   const [hoveredProperty, setHoveredProperty] = useState<string | null>(null);
   const [zoom, setZoom] = useState(12);
 
-  // Get city configuration
   const cityConfig =
     cityConfigs[city as keyof typeof cityConfigs] || cityConfigs.LONDON;
   const mapCenter = cityConfig.center;
 
-  // Debug logging
   useEffect(() => {
-    console.log(
-      "PropertyMap received properties:",
-      properties.length,
-      properties
-    );
+
   }, [properties]);
 
   const handlePropertyClick = (propertyId: string) => {
@@ -206,38 +199,34 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     setZoom((prev) => Math.max(prev - 1, 8));
   };
 
-  // Convert lat/lng to pixel positions for the mock map
   const latLngToPixel = (lat: number, lng: number, cityName: string) => {
     const centerLat = mapCenter.lat;
     const centerLng = mapCenter.lng;
 
-    // Different ranges for different cities
     let latRange, lngRange;
     switch (cityName) {
       case "LONDON":
-        latRange = 0.4; // 51.7 - 51.3
-        lngRange = 0.8; // 0.3 - (-0.5)
+        latRange = 0.4;
+        lngRange = 0.8;
         break;
       case "PARIS":
-        latRange = 0.2; // 48.9 - 48.7
-        lngRange = 0.3; // 2.5 - 2.2
+        latRange = 0.2;
+        lngRange = 0.3;
         break;
       case "ALGIERS":
-        latRange = 0.2; // 36.8 - 36.6
-        lngRange = 0.2; // 3.1 - 2.9
+        latRange = 0.2;
+        lngRange = 0.2;
         break;
       default:
         latRange = 0.4;
         lngRange = 0.8;
     }
 
-    // Calculate relative position within city bounds
     const relativeLat = (lat - (centerLat - latRange / 2)) / latRange;
     const relativeLng = (lng - (centerLng - lngRange / 2)) / lngRange;
 
-    // Convert to pixel positions with some padding
-    const x = 10 + relativeLng * 80; // 10% to 90% of width
-    const y = 15 + relativeLat * 70; // 15% to 85% of height
+    const x = 10 + relativeLng * 80;
+    const y = 15 + relativeLat * 70;
 
     return {
       x: Math.max(5, Math.min(95, x)),
@@ -247,13 +236,13 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
   return (
     <div className="w-full h-full bg-gray-100 relative overflow-hidden">
-      {/* Dynamic City Map Background */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-green-50 to-yellow-50">
-        {/* Thames River */}
+        {}
         <div className="absolute top-1/2 left-0 w-full h-2 bg-blue-300 opacity-60 transform -translate-y-1/2"></div>
         <div className="absolute top-1/2 left-0 w-full h-1 bg-blue-400 opacity-40 transform -translate-y-1/2"></div>
 
-        {/* Major Roads */}
+        {}
         <div className="absolute top-20 left-0 w-full h-0.5 bg-gray-400 opacity-30"></div>
         <div className="absolute top-40 left-0 w-full h-0.5 bg-gray-400 opacity-30"></div>
         <div className="absolute top-60 left-0 w-full h-0.5 bg-gray-400 opacity-30"></div>
@@ -264,7 +253,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         <div className="absolute top-0 left-60 w-0.5 h-full bg-gray-400 opacity-30"></div>
         <div className="absolute top-0 left-80 w-0.5 h-full bg-gray-400 opacity-30"></div>
 
-        {/* Parks and Green Spaces */}
+        {}
         <div
           className="absolute top-15 right-20 w-12 h-8 bg-green-200 rounded-lg opacity-50"
           title="Hyde Park"
@@ -278,7 +267,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
           title="Greenwich Park"
         ></div>
 
-        {/* Dynamic City Landmarks */}
+        {}
         {cityConfig.landmarks.map((landmark, index) => {
           const pixelPos = latLngToPixel(landmark.lat, landmark.lng, city);
           return (
@@ -293,7 +282,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
           );
         })}
 
-        {/* Tube Stations */}
+        {}
         <div
           className="absolute top-25 left-30 w-1 h-1 bg-gray-600 rounded-full opacity-60"
           title="Oxford Circus"
@@ -315,7 +304,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
           title="Covent Garden"
         ></div>
 
-        {/* Dynamic City Districts */}
+        {}
         {cityConfig.districts.map((district, index) => {
           const pixelPos = latLngToPixel(district.lat, district.lng, city);
           return (
@@ -330,7 +319,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         })}
       </div>
 
-      {/* Map controls */}
+      {}
       <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-2 z-10">
         <div className="flex flex-col space-y-2">
           <button
@@ -348,7 +337,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         </div>
       </div>
 
-      {/* Property markers */}
+      {}
       <div className="absolute inset-0">
         {properties.map((property, index) => {
           const coords = getMockCoordinates(index, city);
@@ -380,7 +369,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
                   <MapPinIcon className="h-5 w-5 text-white" />
                 </div>
 
-                {/* Property popup */}
+                {}
                 {(isSelected || isHovered) && (
                   <div className="absolute top-12 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-xl p-4 min-w-[250px] z-30 border border-gray-200">
                     <div className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
@@ -401,7 +390,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
                         {property.bedrooms} bed • {property.bathrooms} bath
                       </div>
                     </div>
-                    {/* Arrow pointing to marker */}
+                    {}
                     <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-200 rotate-45"></div>
                   </div>
                 )}
@@ -411,7 +400,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         })}
       </div>
 
-      {/* Map Legend */}
+      {}
       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 z-10 max-w-32">
         <div className="text-xs font-medium text-gray-700 mb-2">Legend</div>
         <div className="space-y-1 text-xs">
@@ -434,7 +423,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         </div>
       </div>
 
-      {/* Map info */}
+      {}
       <div className="absolute bottom-4 left-4 text-xs text-gray-500 z-10">
         <div className="bg-white/80 backdrop-blur-sm rounded px-2 py-1">
           <div className="flex items-center space-x-2">
@@ -459,7 +448,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         </div>
       </div>
 
-      {/* No properties message */}
+      {}
       {properties.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-gray-500">

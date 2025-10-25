@@ -23,7 +23,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Listing ID Filter */}
+        {}
         <div>
           <label
             htmlFor="listingId"
@@ -43,7 +43,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
           />
         </div>
 
-        {/* Source Filter */}
+        {}
         <CustomDropdown
           label="Source"
           options={[
@@ -60,7 +60,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
           placeholder="All Sources"
         />
 
-        {/* Rating Filter */}
+        {}
         <CustomDropdown
           label="Rating"
           options={[
@@ -80,7 +80,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
           placeholder="All Ratings"
         />
 
-        {/* Channel Filter */}
+        {}
         <div>
           <label
             htmlFor="channel"
@@ -102,7 +102,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Date From */}
+        {}
         <CustomDatePicker
           label="From Date"
           value={filters.dateFrom || ""}
@@ -110,7 +110,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
           placeholder="Select start date"
         />
 
-        {/* Date To */}
+        {}
         <CustomDatePicker
           label="To Date"
           value={filters.dateTo || ""}
@@ -119,7 +119,7 @@ export const ReviewFilters: React.FC<ReviewFiltersProps> = ({
         />
       </div>
 
-      {/* Clear Filters */}
+      {}
       <div className="flex justify-end">
         <button
           onClick={() =>

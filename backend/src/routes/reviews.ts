@@ -14,7 +14,6 @@ const router = express.Router();
 const hostawayService = new HostawayService();
 const hybridReviewsService = new HybridReviewsService();
 
-// Get all reviews with filters
 router.get(
   "/",
   [
@@ -47,10 +46,8 @@ router.get(
         offset = 0,
       } = req.query;
 
-      // Fetch reviews using hybrid service (Hostaway + Google)
       const allReviews = await hybridReviewsService.getAllReviews();
 
-      // Apply filters
       let filteredReviews = allReviews;
 
       if (listingId) {
@@ -93,7 +90,6 @@ router.get(
         );
       }
 
-      // Get approval status for each review
       const reviewIds = filteredReviews.map((review) => review.id);
       const approvals = await ReviewSelection.find({
         reviewId: { $in: reviewIds },
@@ -108,7 +104,6 @@ router.get(
         });
       });
 
-      // Add approval status to reviews
       const reviewsWithApproval = filteredReviews.map((review) => ({
         ...review,
         approval: approvalMap.get(review.id) || {
@@ -118,7 +113,6 @@ router.get(
         },
       }));
 
-      // Apply pagination
       const paginatedReviews = reviewsWithApproval.slice(
         parseInt(offset as string),
         parseInt(offset as string) + parseInt(limit as string)
@@ -134,13 +128,12 @@ router.get(
           filteredReviews.length,
       });
     } catch (error) {
-      console.error("Error fetching reviews:", error);
+
       res.status(500).json({ message: "Failed to fetch reviews" });
     }
   }
 );
 
-// Test endpoint to check if reviews service is working
 router.get("/test", async (req: express.Request, res: express.Response) => {
   try {
     res.json({
@@ -152,12 +145,11 @@ router.get("/test", async (req: express.Request, res: express.Response) => {
   }
 });
 
-// Test endpoint to check hybrid reviews service
 router.get(
   "/test-hybrid",
   async (req: express.Request, res: express.Response) => {
     try {
-      console.log("🧪 Testing hybrid reviews service...");
+
       const { HybridReviewsService } = await import(
         "../services/hybridReviews"
       );
@@ -171,7 +163,7 @@ router.get(
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("❌ Hybrid service test failed:", error);
+
       res.status(500).json({
         error: "Hybrid service test failed",
         details: error instanceof Error ? error.message : "Unknown error",
@@ -180,7 +172,6 @@ router.get(
   }
 );
 
-// Get reviews for a specific listing (public endpoint)
 router.get(
   "/listing/:listingId",
   [param("listingId").isString().notEmpty()],
@@ -189,40 +180,20 @@ router.get(
       const { listingId } = req.params;
       const { rating, limit = 20, offset = 0 } = req.query;
 
-      console.log(`🔍 Fetching reviews for listing: ${listingId}`);
-
-      // First try to get approved reviews for this property
       const approvals = await ReviewSelection.find({
         propertyId: listingId,
         isApproved: true,
       });
 
-      console.log(`📋 Found ${approvals.length} approved reviews`);
-
       if (approvals.length > 0) {
-        // Use approved reviews if available
+
         const reviewIds = approvals.map((approval) => approval.reviewId);
 
-        console.log(
-          `🔍 Found ${reviewIds.length} approved review IDs: ${reviewIds
-            .slice(0, 3)
-            .join(", ")}${reviewIds.length > 3 ? "..." : ""}`
-        );
-
-        // Get reviews from hybrid service and filter by approved review IDs
         const allReviews = await hybridReviewsService.getAllReviews();
-        console.log(
-          `📊 Hybrid service returned ${allReviews.length} total reviews`
-        );
 
-        // Filter reviews to only include approved ones for this property
         const approvedReviews = allReviews.filter((review) => {
           return reviewIds.includes(review.id);
         });
-
-        console.log(
-          `📋 Found ${approvedReviews.length} approved reviews from hybrid service`
-        );
 
         const filteredReviews = approvedReviews.filter((review: any) => {
           if (rating) {
@@ -257,35 +228,21 @@ router.get(
         });
       }
 
-      // If no reviews found in database, try hybrid service as fallback
-      console.log(
-        `🔄 No reviews found in database, trying hybrid service as fallback...`
-      );
-
-      // Try to get reviews directly from hybrid service
       try {
         const { HybridReviewsService } = await import(
           "../services/hybridReviews"
         );
         const hybridService = new HybridReviewsService();
         const allReviews = await hybridService.getAllReviews();
-        console.log(
-          `📊 Hybrid service returned ${allReviews.length} total reviews`
-        );
 
-        // Filter reviews for this specific property
         const propertyReviews = allReviews.filter((review) => {
-          // Match by property ID or hostaway listing ID
+
           return (
             review.propertyId === listingId ||
             review.listingId === listingId ||
             review.listingId === req.query.hostawayListingId
           );
         });
-
-        console.log(
-          `🎯 Found ${propertyReviews.length} reviews for property ${listingId}`
-        );
 
         if (propertyReviews.length === 0) {
           return res.json({
@@ -296,7 +253,6 @@ router.get(
           });
         }
 
-        // Convert hybrid reviews to the expected format
         const formattedReviews = propertyReviews.map((review) => ({
           _id: review.id,
           listingId: review.listingId,
@@ -338,8 +294,7 @@ router.get(
           ratingDistribution,
         });
       } catch (hybridError) {
-        console.error("Error fetching hybrid reviews:", hybridError);
-        // Fall back to empty response
+
         return res.json({
           reviews: [],
           total: 0,
@@ -348,13 +303,12 @@ router.get(
         });
       }
     } catch (error) {
-      console.error("Error fetching listing reviews:", error);
+
       res.status(500).json({ message: "Failed to fetch listing reviews" });
     }
   }
 );
 
-// Approve a review
 router.post(
   "/:reviewId/approve",
   [
@@ -373,16 +327,15 @@ router.post(
       const { reviewId } = req.params;
       const { propertyId, source = "hostaway" } = req.body;
 
-      // Check if review selection already exists
       let reviewSelection = await ReviewSelection.findOne({ reviewId });
 
       if (reviewSelection) {
-        // Update existing selection
+
         reviewSelection.isApproved = true;
         reviewSelection.approvedBy = req.user!._id as any;
         reviewSelection.approvedAt = new Date();
       } else {
-        // Create new selection
+
         reviewSelection = new ReviewSelection({
           reviewId,
           source,
@@ -404,13 +357,12 @@ router.post(
         },
       });
     } catch (error) {
-      console.error("Error approving review:", error);
+
       res.status(500).json({ message: "Failed to approve review" });
     }
   }
 );
 
-// Unapprove a review
 router.delete(
   "/:reviewId/approve",
   [
@@ -443,49 +395,43 @@ router.delete(
         },
       });
     } catch (error) {
-      console.error("Error unapproving review:", error);
+
       res.status(500).json({ message: "Failed to unapprove review" });
     }
   }
 );
 
-// Get dashboard statistics
 router.get(
   "/stats/dashboard",
   [authenticateToken, requireRole(["manager", "admin"])],
   async (req: AuthRequest, res: express.Response) => {
     try {
-      // Get all reviews
+
       const allReviews = await hostawayService.fetchReviews(1000, 0);
 
-      // Get approval statistics
       const totalReviews = allReviews.length;
       const approvedReviews = await ReviewSelection.countDocuments({
         isApproved: true,
       });
       const pendingReviews = totalReviews - approvedReviews;
 
-      // Calculate average rating
       const averageRating =
         totalReviews > 0
           ? allReviews.reduce((sum, review) => sum + review.rating, 0) /
             totalReviews
           : 0;
 
-      // Rating distribution
       const ratingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
       allReviews.forEach((review) => {
         ratingDistribution[review.rating as keyof typeof ratingDistribution]++;
       });
 
-      // Channel distribution
       const channelDistribution: { [key: string]: number } = {};
       allReviews.forEach((review) => {
         channelDistribution[review.channel] =
           (channelDistribution[review.channel] || 0) + 1;
       });
 
-      // Reviews by listing
       const listingStats: {
         [key: string]: { count: number; avgRating: number };
       } = {};
@@ -497,7 +443,6 @@ router.get(
         listingStats[review.listingId].avgRating += review.rating;
       });
 
-      // Calculate average ratings for each listing
       Object.keys(listingStats).forEach((listingId) => {
         const stats = listingStats[listingId];
         stats.avgRating = Math.round((stats.avgRating / stats.count) * 10) / 10;
@@ -513,13 +458,12 @@ router.get(
         listingStats,
       });
     } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
+
       res.status(500).json({ message: "Failed to fetch dashboard statistics" });
     }
   }
 );
 
-// Fetch fresh reviews from Hostaway API
 router.post(
   "/refresh",
   [authenticateToken, requireRole(["manager", "admin"])],
@@ -533,19 +477,18 @@ router.post(
         lastUpdated: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error refreshing reviews:", error);
+
       res.status(500).json({ message: "Failed to refresh reviews" });
     }
   }
 );
 
-// Get Hostaway reviews specifically
 router.get(
   "/hostaway",
   [authenticateToken, requireRole(["manager", "admin"])],
   async (req: AuthRequest, res: express.Response) => {
     try {
-      console.log("Fetching Hostaway reviews...");
+
       const hostawayReviews = await hostawayService.fetchReviews(1000, 0);
 
       res.json({
@@ -556,7 +499,7 @@ router.get(
         lastUpdated: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error fetching Hostaway reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to fetch Hostaway reviews",
@@ -566,13 +509,12 @@ router.get(
   }
 );
 
-// Get hybrid reviews (Hostaway + Google)
 router.get(
   "/hybrid",
   [authenticateToken, requireRole(["manager", "admin"])],
   async (req: AuthRequest, res: express.Response) => {
     try {
-      console.log("Fetching hybrid reviews (Hostaway + Google)...");
+
       const hybridReviews = await hybridReviewsService.getAllReviews();
 
       res.json({
@@ -583,7 +525,7 @@ router.get(
         lastUpdated: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error fetching hybrid reviews:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to fetch hybrid reviews",
@@ -593,36 +535,30 @@ router.get(
   }
 );
 
-// Get dashboard statistics
 router.get(
   "/stats",
   [authenticateToken, requireRole(["manager", "admin"])],
   async (req: AuthRequest, res: express.Response) => {
     try {
-      console.log("Fetching dashboard statistics...");
 
-      // Get statistics from hybrid service
       const stats = await hybridReviewsService.getReviewsStats();
 
-      // Get approved reviews from database
       const approvedReviews = await ReviewSelection.find({ isApproved: true });
       const approvedCount = approvedReviews.length;
       const pendingCount = Math.max(0, stats.totalReviews - approvedCount);
 
-      // Calculate channel distribution
       const channelDistribution = {
         hostaway: stats.hostawayReviews,
         google: stats.googleReviews,
       };
 
-      // Calculate listing stats
       const listingStats: {
         [key: string]: { count: number; avgRating: number };
       } = {};
       Object.entries(stats.reviewsByProperty).forEach(([propertyId, count]) => {
         listingStats[propertyId] = {
           count,
-          avgRating: stats.averageRating, // Use overall average for now
+          avgRating: stats.averageRating,
         };
       });
 
@@ -642,7 +578,7 @@ router.get(
         },
       });
     } catch (error) {
-      console.error("Error fetching dashboard statistics:", error);
+
       res.status(500).json({
         success: false,
         message: "Failed to fetch dashboard statistics",

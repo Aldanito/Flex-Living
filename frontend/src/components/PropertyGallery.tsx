@@ -33,7 +33,7 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
 
   return (
     <div className="relative w-full">
-      {/* Main Image */}
+      {}
       <div className="relative h-96 md:h-[500px] rounded-xl overflow-hidden group">
         <img
           src={images[currentIndex]}
@@ -41,7 +41,7 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
           className="w-full h-full object-cover"
         />
 
-        {/* Navigation Arrows */}
+        {}
         {images.length > 1 && (
           <>
             <button
@@ -85,13 +85,13 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
           </>
         )}
 
-        {/* Image Counter */}
+        {}
         <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
           {currentIndex + 1} / {images.length}
         </div>
       </div>
 
-      {/* Thumbnail Navigation */}
+      {}
       {images.length > 1 && (
         <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
           {images.map((image, index) => (

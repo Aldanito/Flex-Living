@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { User, AuthResponse } from "../types/index";
 import apiService from "../services/api";
+import { AuthContext } from "./AuthContextDefinition";
 
 interface AuthContextType {
   user: User | null;
@@ -11,16 +12,6 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
 }
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -37,8 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const response = await apiService.getCurrentUser();
           setUser(response.user);
-        } catch (error) {
-          console.error("Failed to get current user:", error);
+        } catch {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
         }
@@ -57,7 +47,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem("refreshToken", response.refreshToken);
       setUser(response.user);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.log("error", error);
+
       throw error;
     }
   };
@@ -78,7 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem("refreshToken", response.refreshToken);
       setUser(response.user);
     } catch (error) {
-      console.error("Registration failed:", error);
+      console.log("error", error);
       throw error;
     }
   };

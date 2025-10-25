@@ -59,7 +59,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
 
   return (
     <div className="space-y-8">
-      {/* Main Stats Grid */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, index) => {
           const Icon = card.icon;
@@ -109,7 +109,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
                 </div>
               </div>
 
-              {/* Progress bar for visual appeal */}
+              {}
               <div className="mt-4">
                 <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
                   <div
@@ -136,7 +136,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
         })}
       </div>
 
-      {/* Rating Distribution */}
+      {}
       <div className="glass-card rounded-2xl p-8 animate-slide-up">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-10 h-10 bg-[#284E4C] rounded-xl flex items-center justify-center">
@@ -181,7 +181,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
                 key={rating}
                 className="flex items-center space-x-4 p-4 bg-white rounded-xl hover:bg-gray-50 transition-colors duration-200"
               >
-                {/* Rating Label */}
+                {}
                 <div className="flex items-center space-x-2 min-w-[80px]">
                   <div className="flex items-center space-x-1">
                     {Array.from({ length: 5 }, (_, i) => (
@@ -200,7 +200,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
                   </span>
                 </div>
 
-                {/* Progress Bar */}
+                {}
                 <div className="flex-1">
                   <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                     <div
@@ -212,7 +212,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
                   </div>
                 </div>
 
-                {/* Count and Percentage */}
+                {}
                 <div className="flex items-center space-x-4 min-w-[120px]">
                   <div className="text-right">
                     <div className="text-lg font-bold text-black">
@@ -233,7 +233,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
         </div>
       </div>
 
-      {/* Channel Distribution */}
+      {}
       <div className="glass-card rounded-2xl p-8 animate-slide-up">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-10 h-10 bg-[#284E4C] rounded-xl flex items-center justify-center">
@@ -323,14 +323,14 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
                   key={channel}
                   className="flex items-center space-x-4 p-4 bg-white rounded-xl hover:bg-gray-50 transition-colors duration-200"
                 >
-                  {/* Channel Icon */}
+                  {}
                   <div
                     className={`w-12 h-12 bg-gradient-to-r ${channelInfo.color} rounded-xl flex items-center justify-center flex-shrink-0`}
                   >
                     <div className="text-white">{channelInfo.icon}</div>
                   </div>
 
-                  {/* Channel Info */}
+                  {}
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <div>
@@ -351,7 +351,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
                       </div>
                     </div>
 
-                    {/* Progress Bar */}
+                    {}
                     <div className="mt-3">
                       <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                         <div
@@ -366,7 +366,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
             }
           )}
 
-          {/* Show message if no channel data */}
+          {}
           {(!stats.channelDistribution ||
             Object.keys(stats.channelDistribution).length === 0) && (
             <div className="text-center py-8">

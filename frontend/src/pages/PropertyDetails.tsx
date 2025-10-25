@@ -54,10 +54,9 @@ const PropertyDetails: React.FC = () => {
       setLoading(true);
       const response = await apiService.getProperty(propertyId);
       setProperty(response.data);
-    } catch (err) {
+    } catch {
       setError("Failed to load property details");
-      console.error("Error loading property details:", err);
-      // Fallback to mock data
+
       setProperty({
         _id: propertyId,
         name: "Elegant 1 Bedroom Apartment in Bermondsey - The Flex London",
@@ -106,13 +105,12 @@ const PropertyDetails: React.FC = () => {
     async (propertyId: string) => {
       try {
         setReviewsLoading(true);
-        // Use the property's _id for consistency with the approval system
+
         const listingId = property?._id || propertyId;
         const response = await apiService.getListingReviews(listingId);
         setReviews(response.reviews);
-      } catch (err: unknown) {
-        console.error("Failed to load reviews:", err);
-        // Don't set error state for reviews, just log it
+      } catch {
+        // Handle error silently
       } finally {
         setReviewsLoading(false);
       }
@@ -168,7 +166,7 @@ const PropertyDetails: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
+      {}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -196,12 +194,12 @@ const PropertyDetails: React.FC = () => {
         </div>
       </nav>
 
-      {/* Main Content */}
+      {}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Content */}
+          {}
           <div className="lg:col-span-2 space-y-8">
-            {/* Image Gallery */}
+            {}
             <div className="space-y-4">
               <div className="grid grid-cols-4 gap-4">
                 <div className="col-span-3">
@@ -240,7 +238,7 @@ const PropertyDetails: React.FC = () => {
               </div>
             </div>
 
-            {/* Property Title and Info */}
+            {}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl font-bold text-gray-900">
@@ -281,7 +279,7 @@ const PropertyDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* Property Details Grid */}
+              {}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
                 <div>
                   <p className="text-sm text-gray-600">Property Type</p>
@@ -308,14 +306,14 @@ const PropertyDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* Location */}
+              {}
               <div className="mt-4 flex items-center space-x-2 text-gray-600">
                 <MapPinIcon className="h-5 w-5" />
                 <span>{property.address}</span>
               </div>
             </div>
 
-            {/* About This Property */}
+            {}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 About this property
@@ -328,7 +326,7 @@ const PropertyDetails: React.FC = () => {
               </p>
             </div>
 
-            {/* Features */}
+            {}
             {property.features && property.features.length > 0 && (
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -348,7 +346,7 @@ const PropertyDetails: React.FC = () => {
               </div>
             )}
 
-            {/* Amenities */}
+            {}
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Amenities</h2>
@@ -369,7 +367,7 @@ const PropertyDetails: React.FC = () => {
               </div>
             </div>
 
-            {/* Nearby Transport */}
+            {}
             {property.nearbyTransport &&
               property.nearbyTransport.length > 0 && (
                 <div>
@@ -390,7 +388,7 @@ const PropertyDetails: React.FC = () => {
                 </div>
               )}
 
-            {/* Stay Policies */}
+            {}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Stay Policies
@@ -472,7 +470,7 @@ const PropertyDetails: React.FC = () => {
               </div>
             </div>
 
-            {/* Location */}
+            {}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Location
@@ -495,7 +493,7 @@ const PropertyDetails: React.FC = () => {
               </div>
             </div>
 
-            {/* Guest Reviews */}
+            {}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Guest Reviews
@@ -596,7 +594,7 @@ const PropertyDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Sidebar - Booking */}
+          {}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
               <div className="bg-[#284E4C] rounded-lg p-6 text-white">

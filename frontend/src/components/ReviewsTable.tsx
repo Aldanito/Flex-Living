@@ -31,13 +31,11 @@ export const ReviewsTable: React.FC<ReviewsTableProps> = ({
   const [sortField, setSortField] = useState<keyof Review>("reviewDate");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
-  // Sort reviews based on current sort settings
   const sortedReviews = useMemo(() => {
     return [...reviews].sort((a, b) => {
       let aValue: unknown = a[sortField];
       let bValue: unknown = b[sortField];
 
-      // Handle different data types
       if (sortField === "reviewDate") {
         aValue = new Date(aValue as string).getTime();
         bValue = new Date(bValue as string).getTime();
@@ -103,8 +101,6 @@ export const ReviewsTable: React.FC<ReviewsTableProps> = ({
     });
   };
 
-  // Removed getRatingStars function - no longer using star icons
-
   const getSourceBadgeColor = (source: string) => {
     switch (source) {
       case "hostaway":
@@ -153,7 +149,7 @@ export const ReviewsTable: React.FC<ReviewsTableProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Bulk Actions */}
+      {}
       {selectedReviews.size > 0 && (
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center justify-between">

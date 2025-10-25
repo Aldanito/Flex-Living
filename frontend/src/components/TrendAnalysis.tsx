@@ -1,13 +1,6 @@
 import React from "react";
-import type { DashboardStats } from "../types/index";
+import type { DashboardStats, TrendData } from "../types/index";
 import { ChartBarIcon } from "@heroicons/react/24/outline";
-
-interface TrendData {
-  month: string;
-  count: number;
-  averageRating: number;
-  reviews: any[];
-}
 
 interface RecurringIssue {
   keyword: string;
@@ -62,7 +55,7 @@ export const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Overview Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
@@ -157,7 +150,7 @@ export const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
         </div>
       </div>
 
-      {/* Monthly Trends Chart */}
+      {}
       <div className="bg-white shadow rounded-lg">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">Monthly Trends</h3>
@@ -241,7 +234,7 @@ export const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
         </div>
       </div>
 
-      {/* Recurring Issues */}
+      {}
       <div className="bg-white shadow rounded-lg">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">
@@ -325,7 +318,7 @@ export const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
         </div>
       </div>
 
-      {/* Channel Performance */}
+      {}
       {stats && (
         <div className="glass-card rounded-2xl p-8 animate-slide-up">
           <div className="flex items-center space-x-3 mb-6">
@@ -441,7 +434,7 @@ export const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
               }
             )}
 
-            {/* Show message if no channel data */}
+            {}
             {(!stats.channelDistribution ||
               Object.keys(stats.channelDistribution).length === 0) && (
               <div className="text-center py-12">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
+import type { ApiError } from "../types/index";
 import {
   EyeIcon,
   EyeSlashIcon,
@@ -28,8 +29,8 @@ export const Login: React.FC = () => {
     try {
       await login(email, password);
       navigate(from, { replace: true });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+    } catch (err: unknown) {
+      setError((err as ApiError).response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -38,9 +39,9 @@ export const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        {/* Login Card */}
+        {}
         <div className="glass-card rounded-3xl shadow-2xl p-8 animate-scale-in">
-          {/* Header */}
+          {}
           <div className="text-center mb-8">
             <div className="relative mx-auto w-16 h-16 mb-4">
               <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
@@ -60,7 +61,7 @@ export const Login: React.FC = () => {
             </p>
           </div>
 
-          {/* Error Message */}
+          {}
           {error && (
             <div className="mb-6 animate-slide-up">
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center">
@@ -72,10 +73,10 @@ export const Login: React.FC = () => {
             </div>
           )}
 
-          {/* Login Form */}
+          {}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
-              {/* Email Field */}
+              {}
               <div>
                 <label
                   htmlFor="email"
@@ -101,7 +102,7 @@ export const Login: React.FC = () => {
                 </div>
               </div>
 
-              {/* Password Field */}
+              {}
               <div>
                 <label
                   htmlFor="password"
@@ -136,7 +137,7 @@ export const Login: React.FC = () => {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
+            {}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -160,7 +161,7 @@ export const Login: React.FC = () => {
               </a>
             </div>
 
-            {/* Submit Button */}
+            {}
             <button
               type="submit"
               disabled={loading}
@@ -180,7 +181,7 @@ export const Login: React.FC = () => {
             </button>
           </form>
 
-          {/* Footer */}
+          {}
           <div className="mt-8 text-center">
             <p className="text-slate-600">
               Don't have an account?{" "}
@@ -194,7 +195,7 @@ export const Login: React.FC = () => {
           </div>
         </div>
 
-        {/* Background Elements */}
+        {}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-20 animate-pulse"></div>
           <div

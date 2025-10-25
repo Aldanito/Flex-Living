@@ -7,7 +7,6 @@ import { AuthRequest, authenticateToken } from "../middleware/auth";
 
 const router = express.Router();
 
-// Register a new user
 router.post(
   "/register",
   [
@@ -24,17 +23,14 @@ router.post(
 
       const { email, password, role = "manager" } = req.body;
 
-      // Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      // Hash password
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Create user
       const user = new User({
         email,
         password: hashedPassword,
@@ -52,13 +48,12 @@ router.post(
         },
       });
     } catch (error) {
-      console.error("Registration error:", error);
+
       res.status(500).json({ message: "Internal server error" });
     }
   }
 );
 
-// Login user
 router.post(
   "/login",
   [body("email").isEmail().normalizeEmail(), body("password").exists()],
@@ -71,29 +66,26 @@ router.post(
 
       const { email, password } = req.body;
 
-      // Find user
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // Check password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // Generate JWT tokens
       const accessToken = jwt.sign(
         { userId: (user._id as any).toString() },
         process.env.JWT_SECRET!,
-        { expiresIn: (15 * 60) as any } // 15 minutes
+        { expiresIn: (15 * 60) as any }
       );
 
       const refreshToken = jwt.sign(
         { userId: (user._id as any).toString() },
         process.env.JWT_REFRESH_SECRET!,
-        { expiresIn: (7 * 24 * 60 * 60) as any } // 7 days
+        { expiresIn: (7 * 24 * 60 * 60) as any }
       );
 
       res.json({
@@ -107,13 +99,12 @@ router.post(
         },
       });
     } catch (error) {
-      console.error("Login error:", error);
+
       res.status(500).json({ message: "Internal server error" });
     }
   }
 );
 
-// Refresh access token
 router.post("/refresh", async (req: express.Request, res: express.Response) => {
   try {
     const { refreshToken } = req.body;
@@ -135,7 +126,7 @@ router.post("/refresh", async (req: express.Request, res: express.Response) => {
     const newAccessToken = jwt.sign(
       { userId: (user._id as any).toString() },
       process.env.JWT_SECRET!,
-      { expiresIn: (15 * 60) as any } // 15 minutes
+      { expiresIn: (15 * 60) as any }
     );
 
     res.json({
@@ -147,12 +138,11 @@ router.post("/refresh", async (req: express.Request, res: express.Response) => {
       },
     });
   } catch (error) {
-    console.error("Token refresh error:", error);
+
     res.status(401).json({ message: "Invalid refresh token" });
   }
 });
 
-// Get current user
 router.get(
   "/me",
   authenticateToken,
@@ -175,7 +165,7 @@ router.get(
         },
       });
     } catch (error) {
-      console.error("Get user error:", error);
+
       res.status(500).json({ message: "Internal server error" });
     }
   }

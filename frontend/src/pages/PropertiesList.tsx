@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   MapPinIcon,
@@ -9,7 +9,7 @@ import {
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 import { PropertyMap } from "../components/PropertyMap";
-import { useSearch } from "../contexts/SearchContext";
+import { useSearch } from "../hooks/useSearch";
 import apiService from "../services/api";
 
 interface Property {
@@ -64,7 +64,6 @@ export const PropertiesList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
 
-  // Initialize filters from URL parameters
   useEffect(() => {
     const urlFilters = {
       location: searchParams.get("location") || "LONDON",
@@ -81,21 +80,10 @@ export const PropertiesList: React.FC = () => {
     setFilters(urlFilters);
   }, [searchParams, setFilters]);
 
-  useEffect(() => {
-    loadProperties();
-  }, [filters]);
-
-  useEffect(() => {
-    if (filters.guests) {
-      loadProperties();
-    }
-  }, [filters.guests]);
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     try {
       setLoading(true);
-      // Convert search context filters to API format
-      // Convert LONDON to London for API compatibility
+
       const cityName =
         filters.location.charAt(0) + filters.location.slice(1).toLowerCase();
       const apiFilters = {
@@ -104,18 +92,26 @@ export const PropertiesList: React.FC = () => {
         maxPrice: filters.maxPrice?.toString() || "",
         guests: filters.guests.toString(),
       };
-      console.log("API Filters:", apiFilters); // Debug log
-      console.log("Current filters:", filters); // Debug log
+
       const response = await apiService.getPublicProperties(apiFilters);
-      console.log("API Response:", response); // Debug log
+
       setProperties(response.data || []);
-    } catch (error) {
-      console.error("Error loading properties:", error);
+    } catch {
       setProperties([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    loadProperties();
+  }, [filters, loadProperties]);
+
+  useEffect(() => {
+    if (filters.guests) {
+      loadProperties();
+    }
+  }, [filters.guests, loadProperties]);
 
   const formatPrice = (property: Property) => {
     if (property.pricePerNight) {
@@ -129,7 +125,7 @@ export const PropertiesList: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header with search and filters */}
+      {}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between mb-4">
@@ -147,9 +143,9 @@ export const PropertiesList: React.FC = () => {
         </div>
       </div>
 
-      {/* Main content with split layout */}
+      {}
       <div className="flex h-[calc(100vh-120px)]">
-        {/* Left side - Property cards */}
+        {}
         <div className="flex-1 overflow-y-auto">
           <div className="p-6">
             {loading ? (
@@ -177,7 +173,7 @@ export const PropertiesList: React.FC = () => {
                       navigate(`/properties/${property._id}`);
                     }}
                   >
-                    {/* Property Image */}
+                    {}
                     <div className="relative h-64 rounded-t-lg overflow-hidden">
                       <img
                         src={
@@ -187,19 +183,19 @@ export const PropertiesList: React.FC = () => {
                         alt={property.name}
                         className="w-full h-full object-cover"
                       />
-                      {/* Price Badge */}
+                      {}
                       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
                         <span className="text-[#284E4C] font-bold text-sm">
                           {formatPrice(property)}
                         </span>
                       </div>
-                      {/* Heart Icon */}
+                      {}
                       <button className="absolute top-4 left-4 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors">
                         <HeartIcon className="h-4 w-4 text-gray-600" />
                       </button>
                     </div>
 
-                    {/* Property Details */}
+                    {}
                     <div className="p-4">
                       <h3 className="font-bold text-gray-900 mb-2 line-clamp-2">
                         {property.name}
@@ -209,7 +205,7 @@ export const PropertiesList: React.FC = () => {
                         <span className="text-sm">{property.address}</span>
                       </div>
 
-                      {/* Property Stats */}
+                      {}
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <div className="flex items-center">
                           <HomeIcon className="h-4 w-4 mr-1" />
@@ -234,7 +230,7 @@ export const PropertiesList: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Amenities */}
+                      {}
                       <div className="flex flex-wrap gap-2 mt-3">
                         {property.amenities
                           .slice(0, 3)
@@ -260,7 +256,7 @@ export const PropertiesList: React.FC = () => {
           </div>
         </div>
 
-        {/* Right side - Map */}
+        {}
         <div className="w-1/2 border-l border-gray-200">
           <PropertyMap
             properties={properties}
@@ -271,7 +267,7 @@ export const PropertiesList: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom content section */}
+      {}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -294,7 +290,7 @@ export const PropertiesList: React.FC = () => {
             </div>
           </div>
 
-          {/* FAQ Section */}
+          {}
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-[#284E4C] mb-8 text-center">
               Frequently Asked Questions
